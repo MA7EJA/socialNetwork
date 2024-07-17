@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcrypt')
+const cloudinary = require('cloudinary')
 
 const getDataUrl = require('../utils/urlGenerator');
 
@@ -19,6 +20,19 @@ const registerUser = async (req, res) => {
         const fileUrl = getDataUrl(file)
 
         const hashPassword = await bcrypt.hash(password, 10);
+
+        const myCould = await cloudinary.v2.uploader.upload(fileUrl.content)
+
+        user = await User.create({
+          name,
+          email,
+          password: hashPassword,
+          gender,
+          profilePicture:{
+            id: myCould.public_id,
+            url: myCould.secure_url
+          },
+        });
 
         
     } catch (error) {
