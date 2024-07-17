@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const cloudinary = require('cloudinary')
 
 const getDataUrl = require('../utils/urlGenerator');
+const generateToken = require('../utils/generateToken');
 
 const registerUser = async (req, res) => {
     try {
@@ -34,7 +35,12 @@ const registerUser = async (req, res) => {
           },
         });
 
+        generateToken(user._id, res)
         
+        res.status(201).json({
+            msg: "User Registered ",
+            user
+        })
     } catch (error) {
         return res.status(500).json(error)
     }
