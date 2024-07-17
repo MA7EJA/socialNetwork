@@ -1,0 +1,19 @@
+# Ignore node_modules in client and server folders
+client/node_modules/
+server/node_modules/
+
+# Ignore .env file specific to server
+server/.env
+
+# Ignore any .env files not specific to server (if applicable)
+*.env
+
+# Ignore package-lock.json (if npm is used) or yarn.lock (if yarn is used)
+package-lock.json
+yarn.lock
+
+# Ignore .DS_Store files (macOS)
+.DS_Store
+
+# Ignore .env.local files (if used for local development overrides)
+.env.local
