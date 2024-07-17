@@ -5,9 +5,6 @@ server/node_modules/
 # Ignore .env file specific to server
 server/.env
 
-# Ignore any .env files not specific to server (if applicable)
-*.env
-
 # Ignore package-lock.json (if npm is used) or yarn.lock (if yarn is used)
 package-lock.json
 yarn.lock

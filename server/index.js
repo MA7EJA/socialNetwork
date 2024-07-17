@@ -1,4 +1,5 @@
 const express = require('express');
+const connectToDb = require('./dataBase/db');
 require('dotenv').config();
 
 const app = express()
@@ -9,5 +10,6 @@ app.listen(process.env.PORT, () => {
           process.exit(1);
         }
         console.log(`Server is Running on ${process.env.PORT} port`)
+        connectToDb()
     }
 );
