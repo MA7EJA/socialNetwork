@@ -2,9 +2,13 @@ const express = require('express');
 const connectToDb = require('./dataBase/db');
 require('dotenv').config();
 
+const cloudinary = require("./config/cloudinary");
+
 const router = require('./routes/Routes')
 
 const app = express()
+
+app.use(express.json())
 
 app.use('/api', router)
 
