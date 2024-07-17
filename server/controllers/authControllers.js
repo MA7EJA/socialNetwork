@@ -59,4 +59,10 @@ const loginUser = tryCatch(async (req, res) => {
     res.json({ msg: "User Logged In", user})
 })
 
-module.exports = { registerUser, loginUser };
+const logoutUser = tryCatch(async (req, res) => {
+    res.cookie('token', '',{maxAge: 0})
+
+    res.json({ msg: "Logged out Successfully"})
+})
+
+module.exports = { registerUser, loginUser, logoutUser };
