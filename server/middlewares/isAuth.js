@@ -18,3 +18,5 @@ const isAuth = async(req, res, next) => {
         res.status(500).json({ msg: "Please Login"})
     }
 }
+
+module.exports = isAuth;
