@@ -11,6 +11,3 @@ yarn.lock
 
 # Ignore .DS_Store files (macOS)
 .DS_Store
-
-# Ignore .env.local files (if used for local development overrides)
-.env.local
