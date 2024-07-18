@@ -5,7 +5,7 @@ const myProfile = tryCatch(async (req, res) => {
     const user = await User.findById(req.user._id).select('-password')
 
     res.json(user)
-})
+});
 
 const userProfile = tryCatch(async (req, res) => {
     const user = await User.findById(req.params.id).select('-password')
@@ -13,7 +13,7 @@ const userProfile = tryCatch(async (req, res) => {
     if(!user) return res.status(404).json({ msg: "No User with this ID"});
 
     res.json(user)
-})
+});
 
 const followAndUnfollowUser = tryCatch(async (req, res) => {
     const user = await User.findById(req.params.id)
@@ -43,6 +43,20 @@ const followAndUnfollowUser = tryCatch(async (req, res) => {
 
         res.json({ msg: "User Followed"})
     }
-})
+});
 
-module.exports = { myProfile, userProfile, followAndUnfollowUser };
+const userFollowersAndFollowingData = tryCatch(async (req, res) => {
+    const user = await User.findById(req.params._id).select('-password').populate('followers', '-password').populate("followings", "-password");
+
+    const followers = user.followers;
+    const followings = user.followings
+
+    res.json({ followers, followings })
+});
+
+module.exports = {
+  myProfile,
+  userProfile,
+  followAndUnfollowUser,
+  userFollowersAndFollowingData,
+};
