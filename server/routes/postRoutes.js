@@ -7,12 +7,14 @@ const {
   likeUnlikePost,
   commentOnPost,
   deleteComment,
+  editCaption,
 } = require("../controllers/postControllers");
 const uploadFile = require("../middlewares/multer");
 
 const router = express.Router();
 
 router.post('/new', isAuth, uploadFile ,newPost);
+router.put("/:id", isAuth, editCaption);
 router.delete("/:id", isAuth, deletePost);
 router.get("/all", isAuth, getAllPosts);
 router.post("/like/:id", isAuth, likeUnlikePost);

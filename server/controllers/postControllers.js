@@ -117,6 +117,20 @@ const deleteComment = tryCatch(async (req, res) => {
     }else{
         return res.status(400).json({ msg: "You are not allowed to delete this comment"})
     }
+});
+
+const editCaption = tryCatch(async (req, res) => {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) return res.status(404).json({ msg: "No post with this ID" });
+
+    if(post.owner.toString() !== req.user._id.toString()) return res.status(403).json({ msg: "You are not owner of this Post"});
+
+    post.caption = req.body.caption
+
+    await post.save()
+
+    res.json({ msg: "Post Updated"})
 })
 
 module.exports = {
@@ -126,4 +140,5 @@ module.exports = {
   likeUnlikePost,
   commentOnPost,
   deleteComment,
+  editCaption,
 };
