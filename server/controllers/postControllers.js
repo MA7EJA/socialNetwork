@@ -78,6 +78,27 @@ const likeUnlikePost = tryCatch(async (req, res) => {
 
         res.json({ msg: "Post Liked" });
     }
+});
+
+
+const commentOnPost = tryCatch(async (req, res) => {
+    const post = await Post.findById(req.params.id)
+
+    if(!post) return res.status(404).json({ msg: "No Post with this ID"});
+
+    post.comments.comment = req.body.comment;
+
+    post.comments.push({ user: req.user._id, name: req.user.name, comment: req.body.comment});
+
+    await post.save()
+
+    res.json({ msg: "Comment Added"})
 })
 
-module.exports = { newPost, deletePost, getAllPosts, likeUnlikePost };
+module.exports = {
+  newPost,
+  deletePost,
+  getAllPosts,
+  likeUnlikePost,
+  commentOnPost,
+};

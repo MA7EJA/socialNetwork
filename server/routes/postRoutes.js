@@ -5,6 +5,7 @@ const {
   deletePost,
   getAllPosts,
   likeUnlikePost,
+  commentOnPost,
 } = require("../controllers/postControllers");
 const uploadFile = require("../middlewares/multer");
 
@@ -14,5 +15,6 @@ router.post('/new', isAuth, uploadFile ,newPost);
 router.delete("/:id", isAuth, deletePost);
 router.get("/all", isAuth, getAllPosts);
 router.post("/like/:id", isAuth, likeUnlikePost);
+router.post("/comment/:id", isAuth, commentOnPost);
 
 module.exports = router
