@@ -2,6 +2,7 @@ const tryCatch = require('../utils/tryCatch')
 const User = require('../models/userModel');
 const getDataUrl = require('../utils/urlGenerator');
 const cloudinary = require('cloudinary')
+const bcrypt = require('bcrypt')
 
 const myProfile = tryCatch(async (req, res) => {
     const user = await User.findById(req.user._id).select('-password')
@@ -79,6 +80,21 @@ const updateProfile = tryCatch(async (req, res) => {
     await user.save()
 
     res.json({ msg: "Profile Updated"})
+});
+
+const updatePassword = tryCatch(async (req, res) => {
+    const user = await User.findById(req.user._id)
+
+    const {oldPassword, newPassword} = req.body;
+    
+    const comparePassword = await bcrypt.compare(oldPassword, user.password)
+    if(!comparePassword) return res.status(400).json({ msg: "Wrong Current Password"});
+
+    user.password = await bcrypt.hash(newPassword, 10);
+
+    await user.save()
+
+    res.json({ msg: "Password Updated"})
 })
 
 module.exports = {
@@ -87,4 +103,5 @@ module.exports = {
   followAndUnfollowUser,
   userFollowersAndFollowingData,
   updateProfile,
+  updatePassword,
 };
