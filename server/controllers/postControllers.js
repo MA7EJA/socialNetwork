@@ -45,11 +45,39 @@ const deletePost = tryCatch(async (req, res) => {
 });
 
 const getAllPosts = tryCatch(async (req, res) => {
-    const posts = await Post.find({ type: "post" }).sort({createdAt: -1}).populate('owner');
+    const posts = await Post.find({ type: "post" })
+      .sort({ createdAt: -1 })
+      .populate("owner", "-password");
 
-    const reels = await Post.find({ type: "reel" }).sort({createdAt: -1}).populate('owner');
+    const reels = await Post.find({ type: "reel" })
+      .sort({ createdAt: -1 })
+      .populate("owner", "-password");
 
     res.json({ posts, reels })
+});
+
+const likeUnlikePost = tryCatch(async (req, res) => {
+    const post = await Post.findById(req.params.id)
+
+    if(!post) return res.status(404).json({
+        msg: "No Post with this ID"
+    })
+
+    if(post.likes.includes(req.user._id)){
+        const index = post.likes.indexOf(req.user._id)
+
+        post.likes.splice(index, 1)
+
+        await post.save()
+
+        res.json({ msg: "Post Unlike" })
+    }else{
+        post.likes.push(req.user._id)
+
+        await post.save();
+
+        res.json({ msg: "Post Liked" });
+    }
 })
 
-module.exports = { newPost, deletePost, getAllPosts };
+module.exports = { newPost, deletePost, getAllPosts, likeUnlikePost };
