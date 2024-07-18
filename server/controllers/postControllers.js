@@ -42,6 +42,14 @@ const deletePost = tryCatch(async (req, res) => {
     await post.deleteOne();
 
     res.json({ msg: "Post Deleted"})
+});
+
+const getAllPosts = tryCatch(async (req, res) => {
+    const posts = await Post.find({ type: "post" }).sort({createdAt: -1}).populate('owner');
+
+    const reels = await Post.find({ type: "reel" }).sort({createdAt: -1}).populate('owner');
+
+    res.json({ posts, reels })
 })
 
-module.exports = { newPost, deletePost };
+module.exports = { newPost, deletePost, getAllPosts };
