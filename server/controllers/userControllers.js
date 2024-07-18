@@ -1,5 +1,7 @@
 const tryCatch = require('../utils/tryCatch')
-const User = require('../models/userModel')
+const User = require('../models/userModel');
+const getDataUrl = require('../utils/urlGenerator');
+const cloudinary = require('cloudinary')
 
 const myProfile = tryCatch(async (req, res) => {
     const user = await User.findById(req.user._id).select('-password')
@@ -54,9 +56,35 @@ const userFollowersAndFollowingData = tryCatch(async (req, res) => {
     res.json({ followers, followings })
 });
 
+const updateProfile = tryCatch(async (req, res) => {
+    const user = await User.findById(req.user._id)
+
+    const {name} = req.body;
+    if(name){
+        user.name = name
+    }
+
+    const file = req.file
+    if(file){
+        const fileUrl = getDataUrl(file)
+
+        await cloudinary.v2.uploader.destroy(user.profilePicture.id);
+
+        const myCloud = await cloudinary.v2.uploader.upload(fileUrl.content)
+
+        user.profilePicture.id = myCloud.public_id;
+        user.profilePicture.url = myCloud.secure_url;
+    }
+
+    await user.save()
+
+    res.json({ msg: "Profile Updated"})
+})
+
 module.exports = {
   myProfile,
   userProfile,
   followAndUnfollowUser,
   userFollowersAndFollowingData,
+  updateProfile,
 };
