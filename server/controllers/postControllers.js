@@ -93,6 +93,30 @@ const commentOnPost = tryCatch(async (req, res) => {
     await post.save()
 
     res.json({ msg: "Comment Added"})
+});
+
+const deleteComment = tryCatch(async (req, res) => {
+    const post = await Post.findById(req.params.id);
+
+    if(!post) return res.status(404).json({ msg: "No post with this ID"});
+
+    if(!req.body.commentId) return res.status(404).json({ msg: "No Comment with this ID"});
+
+    const commentIndex = post.comments.findIndex((item) => item._id.toString() === req.body.commentId.toString());
+
+    if(commentIndex === -1) return res.status(400).json({ msg: "Comment not Found"});
+
+    const comment = post.comments[commentIndex]
+
+    if(post.owner.toString() === req.user._id.toString() || comment.user.toString() === req.user._id.toString()){
+        post.comments.splice(commentIndex, 1)
+
+        await post.save()
+
+        return res.json({ msg: "Comment Deleted"})
+    }else{
+        return res.status(400).json({ msg: "You are not allowed to delete this comment"})
+    }
 })
 
 module.exports = {
@@ -101,4 +125,5 @@ module.exports = {
   getAllPosts,
   likeUnlikePost,
   commentOnPost,
+  deleteComment,
 };
