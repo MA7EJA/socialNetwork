@@ -95,6 +95,13 @@ const updatePassword = tryCatch(async (req, res) => {
     await user.save()
 
     res.json({ msg: "Password Updated"})
+});
+
+const getAllUsers = tryCatch(async (req, res) => {
+    const search = req.query.search || "";
+    const users = await User.find({ name: {$regex: search, $options: "i"}, id: { $ne: req.user._id }}).select('-password')
+
+    res.json(users);
 })
 
 module.exports = {
@@ -104,4 +111,5 @@ module.exports = {
   userFollowersAndFollowingData,
   updateProfile,
   updatePassword,
+  getAllUsers,
 };

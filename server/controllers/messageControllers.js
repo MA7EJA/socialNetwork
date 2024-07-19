@@ -42,6 +42,12 @@ const getAllMessages = tryCatch(async (req, res) => {
 const getAllChats = tryCatch(async (req, res) => {
      const chats = await Chat.find({ users: req.user._id }).populate({ path: "user", select: "name profilePicture"})
 
+    chats.forEach((e) => {
+        e.users = e.users.filter( (user) => {
+            user._id.toString() !== req.user._id.toString()
+        })
+    })
+
      res.json(chats)
 })
 
