@@ -7,6 +7,8 @@ const sendMessage = tryCatch(async (req, res) => {
 
     const senderId = req.user._id;
 
+    if(!recieverId) return res.status(400).json({ msg: "Please Give reciver Id"})
+
     let chat = Chat.findOne({ users: { $all:[senderId, recieverId]}});
 
     if(!chat){
@@ -24,4 +26,17 @@ const sendMessage = tryCatch(async (req, res) => {
     res.status(201).json(newMessage)
 });
 
-module.exports = { sendMessage }
+const getAllMessages = tryCatch(async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user._id;
+
+    const chat = await Chat.findOne({ users:{$all:[userId, id]}});
+
+    if(!chat) return res.status(404).json({ msg: "No chat with this user"});
+
+    const messages = await Messages.find({ chatId: chat._id});
+
+    res.json(messages)
+})
+
+module.exports = { sendMessage, getAllMessages };
