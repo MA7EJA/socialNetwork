@@ -37,6 +37,12 @@ const getAllMessages = tryCatch(async (req, res) => {
     const messages = await Messages.find({ chatId: chat._id});
 
     res.json(messages)
+});
+
+const getAllChats = tryCatch(async (req, res) => {
+     const chats = await Chat.find({ users: req.user._id }).populate({ path: "user", select: "name profilePicture"})
+
+     res.json(chats)
 })
 
-module.exports = { sendMessage, getAllMessages };
+module.exports = { sendMessage, getAllMessages, getAllChats };
