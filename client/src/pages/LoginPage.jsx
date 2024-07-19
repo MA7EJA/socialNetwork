@@ -1,13 +1,19 @@
 import React, {useState} from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { UserData } from '../context/UserContext';
 
 const LoginPage = () => {
+
+    const navigate = useNavigate()
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const { loginUser } = UserData()
+
   const submitHandler = (e) => {
     e.preventDefault();
+    loginUser(email, password, navigate);
   }
 
   return (
