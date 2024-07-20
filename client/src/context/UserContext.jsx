@@ -6,6 +6,12 @@ const UserContext = createContext()
 
 export const UserContextProvider = ({ children }) => {
 
+    const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const darkStyle = {
+      background: 'rgb(31 41 55)',
+      color: '#fff',
+    };
+
     const [ user , setUser ] = useState([])
     const [ isAuth, setIsAuth ] = useState(false)
     const [ loading, setLoading ] = useState(true)
@@ -14,18 +20,12 @@ export const UserContextProvider = ({ children }) => {
       try {
         const { data } = await axios.post('/api/auth/login', {email, password});
 
-        toast.success(data.msg, {style: {
-          background: 'rgb(31 41 55)',
-          color: '#fff',
-        },});
+        toast.success(data.msg, { style: isDarkMode ? darkStyle : {} });
         setIsAuth(true);
         setUser(data.user)
         navigate('/')
       } catch (err) {
-        toast.error(err.response.data.msg, {style: {
-          background: 'rgb(31 41 55)',
-          color: '#fff',
-        },})
+        toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {} })
       }
     };
 
