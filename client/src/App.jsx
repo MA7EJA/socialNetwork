@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import { UserData } from './context/UserContext'
 import AccountPage from './pages/AccountPage'
+import NavigationBar from './components/NavigationBar'
 
 const App = () => {
 
@@ -19,6 +20,7 @@ const App = () => {
           <Route path='/login' element={!isAuth ? <LoginPage/> : <HomePage/>}/>
           <Route path='/register' element={!isAuth ? <RegisterPage/> : <HomePage/>}/>
         </Routes>
+        {isAuth && <NavigationBar/>}
       </BrowserRouter>}
     </>
   )
