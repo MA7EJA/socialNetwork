@@ -1,6 +1,12 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { UserData } from '../context/UserContext';
 
 const AccountPage = ({ user }) => {
+
+    const navigate = useNavigate()
+
+    const { logoutUser } = UserData()
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -8,6 +14,9 @@ const AccountPage = ({ user }) => {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
+    const logoutHandler = () => {
+        logoutUser(navigate)
+    }
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -22,7 +31,7 @@ const AccountPage = ({ user }) => {
                {isDropdownOpen ?  <div id="dropdown" className="z-10 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute mt-11">
                     <ul className="py-2" aria-labelledby="dropdownButton">
                     <li>
-                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</a>
+                        <a onClick={logoutHandler} href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</a>
                     </li>
                     </ul>
                 </div> : ''}

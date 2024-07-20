@@ -41,6 +41,21 @@ export const UserContextProvider = ({ children }) => {
         setIsAuth(false)
         setLoading(false)
       }
+    };
+
+    async function logoutUser(navigate){
+      try {
+        const { data } = await axios.get('/api/auth/logout')
+
+        if(data.msg){
+          toast.success(data.msg, { style: isDarkMode ? darkStyle : {} });
+          setUser([])
+          setIsAuth(false)
+          navigate('/login')
+        }
+      } catch (error) {
+        toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {} })
+      }
     }
 
     useEffect(() => {
@@ -48,7 +63,7 @@ export const UserContextProvider = ({ children }) => {
     }, [])
 
     return (
-      <UserContext.Provider value={{ loginUser, isAuth, setIsAuth, user, setUser, loading }}>
+      <UserContext.Provider value={{ loginUser, isAuth, setIsAuth, user, setUser, loading, logoutUser }}>
         {children}
         <Toaster/>
       </UserContext.Provider>
