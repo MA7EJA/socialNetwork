@@ -9,7 +9,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { loginUser } = UserData()
+  const { loginUser, loading } = UserData()
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -17,7 +17,8 @@ const LoginPage = () => {
   }
 
   return (
-    <div className='lg:mt-24 xl:mt-48'>
+    <>
+        {loading ? <h2>Loading...</h2> : <div className='lg:mt-24 xl:mt-48'>
       <section className="bg-gray-50 dark:bg-gray-900">
         <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 grid lg:grid-cols-2 gap-8 lg:gap-16">
             <div className="flex flex-col justify-center">
@@ -61,7 +62,8 @@ const LoginPage = () => {
             </div>
         </div>
       </section>
-    </div>
+    </div>}
+    </>
   )
 
 }

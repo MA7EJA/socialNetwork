@@ -37,7 +37,7 @@ const AccountPage = ({ user }) => {
                 </div> : ''}
             </div>
             <div className="flex flex-col items-center">
-                <img className="w-24 h-24 mb-3 rounded-full shadow-lg" src={user.profilePicture.url} alt="Bonnie image"/>
+                <img className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover" src={ user.profilePicture.url || 'https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-512x512-0mhn1054.png'} alt={user.profilePicture.url || 'Avatar'}/>
                 <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{user.name}</h5>
                 <span className="text-sm text-gray-500 dark:text-gray-400">{user.email}</span>
             </div>
