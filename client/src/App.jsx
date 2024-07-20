@@ -7,6 +7,7 @@ import { UserData } from './context/UserContext'
 import AccountPage from './pages/AccountPage'
 import NavigationBar from './components/NavigationBar'
 import NotFound from './components/NotFound'
+import ReelsPage from './pages/ReelsPage'
 
 const App = () => {
 
@@ -17,6 +18,7 @@ const App = () => {
       {loading ? "" : <BrowserRouter>
         <Routes>
           <Route path='/' element={isAuth ? <HomePage/> : <LoginPage/>}/>
+          <Route path='/reels' element={isAuth ? <ReelsPage/> : <LoginPage/>}/>
           <Route path='/account' element={isAuth ? <AccountPage user={user}/> : <LoginPage/>}/>
           <Route path='/login' element={!isAuth ? <LoginPage/> : <HomePage/>}/>
           <Route path='/register' element={!isAuth ? <RegisterPage/> : <HomePage/>}/>
