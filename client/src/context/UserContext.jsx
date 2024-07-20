@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 const UserContext = createContext()
@@ -29,8 +29,26 @@ export const UserContextProvider = ({ children }) => {
       }
     };
 
+    async function fatchUser() {
+      try {
+        const { data } = await axios.get('/api/user/me')
+
+        setUser(data)
+        setIsAuth(true)
+        setLoading(false)
+      } catch (error) {
+        console.log(error)
+        setIsAuth(false)
+        setLoading(false)
+      }
+    }
+
+    useEffect(() => {
+      fatchUser()
+    }, [])
+
     return (
-      <UserContext.Provider value={{ loginUser }}>
+      <UserContext.Provider value={{ loginUser, isAuth, setIsAuth, user, setUser, loading }}>
         {children}
         <Toaster/>
       </UserContext.Provider>
