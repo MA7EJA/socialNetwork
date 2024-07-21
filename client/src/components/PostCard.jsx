@@ -163,7 +163,7 @@ const PostCard = ({ type, value }) => {
             <div className='my-4'>
                 <div className='max-h-52 overflow-y-auto'>
                     { value.comments && value.comments.length > 0 ? value.comments.map((e) => (
-                        <Comment value={e} ket={e._id}/>
+                        <Comment value={e} key={e._id}/>
                     )) : <p className='text-gray-400 dark:text-gray-200 mx-4'>No Comments</p>}
                 </div>
             </div>

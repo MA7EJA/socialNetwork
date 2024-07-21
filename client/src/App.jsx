@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
@@ -8,6 +8,7 @@ import AccountPage from './pages/AccountPage'
 import NavigationBar from './components/NavigationBar'
 import NotFound from './components/NotFound'
 import ReelsPage from './pages/ReelsPage'
+import { Loading } from './components/Loading'
 
 const App = () => {
 
@@ -15,17 +16,19 @@ const App = () => {
 
   return (
     <>
-      {loading ? "" : <BrowserRouter>
-        <Routes>
-          <Route path='/' element={isAuth ? <HomePage/> : <LoginPage/>}/>
-          <Route path='/reels' element={isAuth ? <ReelsPage/> : <LoginPage/>}/>
-          <Route path='/account' element={isAuth ? <AccountPage user={user}/> : <LoginPage/>}/>
-          <Route path='/login' element={!isAuth ? <LoginPage/> : <HomePage/>}/>
-          <Route path='/register' element={!isAuth ? <RegisterPage/> : <HomePage/>}/>
-          <Route path='/*' element={<NotFound/>}/>
-        </Routes>
+      <BrowserRouter>
+        <Suspense fallback={<Loading/>}>
+          <Routes>
+            <Route path='/' element={isAuth ? <HomePage/> : <LoginPage/>}/>
+            <Route path='/reels' element={isAuth ? <ReelsPage/> : <LoginPage/>}/>
+            <Route path='/account' element={isAuth ? <AccountPage user={user}/> : <LoginPage/>}/>
+            <Route path='/login' element={!isAuth ? <LoginPage/> : <HomePage/>}/>
+            <Route path='/register' element={!isAuth ? <RegisterPage/> : <HomePage/>}/>
+            <Route path='/*' element={<NotFound/>}/>
+          </Routes>
+        </Suspense>
         {isAuth && <NavigationBar/>}
-      </BrowserRouter>}
+      </BrowserRouter>
     </>
   )
 }

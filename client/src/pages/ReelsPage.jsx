@@ -2,22 +2,27 @@ import React from 'react'
 import AddPost from '../components/AddPost'
 import { PostData } from '../context/PostContext'
 import PostCard from '../components/PostCard'
+import { Loading } from '../components/Loading'
 
 const ReelsPage = () => {
 
-  const { reels } = PostData()
+  const { reels, loading } = PostData()
 
   return (
-      <div className='lg:ml-64 p-2'>
+      <>
+      {
+        loading ? <Loading/> : <div className='lg:ml-64 p-2'>
         <AddPost type="reel"/>
         {reels && reels.length > 0 ? (
           reels.map(reel => (
             <PostCard key={reel._id} value={reel} type={'reel'} />
           ))
         ) : (
-          <p>Loading...</p>
+          <p>No Reels Available</p>
         )}
       </div>
+      }
+      </>
   )
 }
 

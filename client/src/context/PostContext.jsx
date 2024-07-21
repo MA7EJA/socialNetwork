@@ -14,6 +14,7 @@ export const PostContextProvider = ({ children }) => {
 
     const [posts, setPosts] = useState([])
     const [reels, setReels] = useState([])
+    const [loading, setLoading] = useState(true)
 
     async function fetchPost(){
         try {
@@ -21,8 +22,10 @@ export const PostContextProvider = ({ children }) => {
 
             setPosts(data.posts)
             setReels(data.reels)
+            setLoading(false)
         } catch (error) {
             console.log(error)
+            setLoading(false)
         }
     }
 
@@ -68,7 +71,7 @@ export const PostContextProvider = ({ children }) => {
         fetchPost();
     }, [])
 
-    return <PostContext.Provider value={{ posts, reels, addPost, likePost, addComment }}>
+    return <PostContext.Provider value={{ posts, reels, addPost, likePost, addComment, loading }}>
         {children}
     </PostContext.Provider>
 }
