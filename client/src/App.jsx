@@ -9,6 +9,7 @@ import NavigationBar from './components/NavigationBar'
 import NotFound from './components/NotFound'
 import ReelsPage from './pages/ReelsPage'
 import { Loading } from './components/Loading'
+import UserAccountPage from './pages/UserAccountPage'
 
 const App = () => {
 
@@ -22,6 +23,7 @@ const App = () => {
             <Route path='/' element={isAuth ? <HomePage/> : <LoginPage/>}/>
             <Route path='/reels' element={isAuth ? <ReelsPage/> : <LoginPage/>}/>
             <Route path='/account' element={isAuth ? <AccountPage user={user}/> : <LoginPage/>}/>
+            <Route path='/user/:id' element={isAuth ? <UserAccountPage user={user}/> : <LoginPage/>}/>
             <Route path='/login' element={!isAuth ? <LoginPage/> : <HomePage/>}/>
             <Route path='/register' element={!isAuth ? <RegisterPage/> : <HomePage/>}/>
             <Route path='/*' element={<NotFound/>}/>
