@@ -4,6 +4,8 @@ import { RiHeartFill } from "react-icons/ri";
 import { IoChatbox } from "react-icons/io5";
 import { UserData } from '../context/UserContext';
 import { PostData } from '../context/PostContext';
+import { format } from 'date-fns'
+import { Link } from 'react-router-dom';
 
 const PostCard = ({ type, value }) => {
 
@@ -16,6 +18,8 @@ const PostCard = ({ type, value }) => {
     const [isLike, setIsLike] = useState(false)
     const [show, setShow] = useState(false)
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+    const formatDate = format(new Date(value.createdAt), "MMMM do")
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -77,12 +81,13 @@ const PostCard = ({ type, value }) => {
     <div>
         <div className='mx-auto w-full max-w-lg bg-gray-50 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-8'>
             <div className="flex items-center m-4 justify-between">
-                <div className='flex items-center'>
-                    <img className="w-10 h-10 rounded-full mr-4" src={ value.owner.profilePicture.url || 'https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-512x512-0mhn1054.png'} alt=""/>
+                <Link className='flex items-center' to={`/user/${value.owner._id}`}>
+                    <img className="w-11 h-11 rounded-full mr-4" src={ value.owner.profilePicture.url || 'https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-512x512-0mhn1054.png'} alt=""/>
                     <div className="font-medium dark:text-white">
-                        <div className="text-lg text-gray-700 dark:text-gray-50">{value.owner.name}</div>
+                        <div className="text-md text-gray-700 dark:text-gray-50">{value.owner.name}</div>
+                        <div className='text-gray-400 dark:text-gray-500 text-sm'>{formatDate}</div>
                     </div>
-                </div>
+                </Link>
                 <div className="flex items-center">
                     <button onClick={toggleDropdown} id="dropdownButton" data-dropdown-toggle="dropdown" className="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5" type="button">
                         <span className="sr-only">Open dropdown</span>
@@ -173,9 +178,11 @@ export const Comment = ({value}) => {
     return (
         <>
         <div className='flex items-center space-x-2 mt-2'>
-            <img className="w-10 h-10 rounded-full mx-2" src={value.avatar || 'https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-512x512-0mhn1054.png'} alt="Rounded avatar"></img>
+            <Link className='mx-2'>
+                <img className="w-10 h-10 rounded-full" src={value.avatar || 'https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-512x512-0mhn1054.png'} alt="Rounded avatar"></img>
+            </Link>
             <div>
-                <p className='text-gray-600 dark:text-gray-100 font-semibold mb-2'>{value.name}</p>
+                <p className='text-gray-600 dark:text-gray-100 font-semibold'>{value.name}</p>
                 <p className='text-gray-400 dark:text-gray-200 mr-2'>{value.comment}</p>
             </div>
         </div>
