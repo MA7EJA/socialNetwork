@@ -6,6 +6,7 @@ import { UserData } from '../context/UserContext';
 import { PostData } from '../context/PostContext';
 import { format } from 'date-fns'
 import { Link } from 'react-router-dom';
+import { RiDeleteBin6Fill } from "react-icons/ri";
 
 const PostCard = ({ type, value }) => {
 
@@ -88,7 +89,7 @@ const PostCard = ({ type, value }) => {
                         <div className='text-gray-400 dark:text-gray-500 text-sm'>{formatDate}</div>
                     </div>
                 </Link>
-                <div className="flex items-center">
+                {value.owner._id === user._id && (<div className="flex items-center">
                     <button onClick={toggleDropdown} id="dropdownButton" data-dropdown-toggle="dropdown" className="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5" type="button">
                         <span className="sr-only">Open dropdown</span>
                         <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
@@ -102,7 +103,7 @@ const PostCard = ({ type, value }) => {
                         </li>
                         </ul>
                     </div> : ''}
-                </div>
+                </div>)}
             </div>
             <div className='px-4 py-2'>
                 <p className="tracking-tight text-gray-600 md:text-lg dark:text-gray-300">{value.caption}</p>
@@ -163,7 +164,7 @@ const PostCard = ({ type, value }) => {
             <div className='my-4'>
                 <div className='max-h-52 overflow-y-auto'>
                     { value.comments && value.comments.length > 0 ? value.comments.map((e) => (
-                        <Comment value={e} key={e._id}/>
+                        <Comment value={e} key={e._id} user={user}/>
                     )) : <p className='text-gray-400 dark:text-gray-200 mx-4'>No Comments</p>}
                 </div>
             </div>
@@ -174,10 +175,11 @@ const PostCard = ({ type, value }) => {
 
 export default PostCard
 
-export const Comment = ({value}) => {
+export const Comment = ({ value, user }) => {
+
     return (
         <>
-        <div className='flex items-center space-x-2 mt-2'>
+        <div className='flex items-center mt-2'>
             <Link className='mx-2'>
                 <img className="w-10 h-10 rounded-full" src={value.avatar || 'https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-512x512-0mhn1054.png'} alt="Rounded avatar"></img>
             </Link>
@@ -185,6 +187,10 @@ export const Comment = ({value}) => {
                 <p className='text-gray-600 dark:text-gray-100 font-semibold'>{value.name}</p>
                 <p className='text-gray-400 dark:text-gray-200 mr-2'>{value.comment}</p>
             </div>
+            {value.user === user._id && 
+            <button className='ml-auto mr-4 text-red-500 hover:text-red-600'>
+                <RiDeleteBin6Fill/>
+            </button>}
         </div>
         <hr className="h-px my-4 mx-auto bg-gray-200 border-0 dark:bg-gray-700 max-w-[90%]"></hr>
         </>

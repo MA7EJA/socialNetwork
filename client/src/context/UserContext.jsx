@@ -17,34 +17,30 @@ export const UserContextProvider = ({ children }) => {
     const [ loading, setLoading ] = useState(true)
 
     async function registerUser(formdata, navigate){
-      setLoading(true)
+      const toastId = toast.loading("Processing...", { style: isDarkMode ? darkStyle : {} });
       try {
         const { data } = await axios.post('/api/auth/register', formdata);
 
-        toast.success(data.msg, { style: isDarkMode ? darkStyle : {} });
+        toast.success(data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId });
         setIsAuth(true);
         setUser(data.user)
         navigate('/')
-        setLoading(false)
       } catch (err) {
-        toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {} })
-        setLoading(false)
+        toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
       }
     };
 
     async function loginUser(email, password, navigate){
-      setLoading(true)
+      const toastId = toast.loading("Processing...", { style: isDarkMode ? darkStyle : {} });
       try {
         const { data } = await axios.post('/api/auth/login', {email, password});
 
-        toast.success(data.msg, { style: isDarkMode ? darkStyle : {} });
+        toast.success(data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId });
         setIsAuth(true);
         setUser(data.user)
         navigate('/')
-        setLoading(false)
       } catch (err) {
-        toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {} })
-        setLoading(false)
+        toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
       }
     };
 
@@ -63,17 +59,18 @@ export const UserContextProvider = ({ children }) => {
     };
 
     async function logoutUser(navigate){
+      const toastId = toast.loading("Processing...", { style: isDarkMode ? darkStyle : {} });
       try {
         const { data } = await axios.get('/api/auth/logout')
 
         if(data.msg){
-          toast.success(data.msg, { style: isDarkMode ? darkStyle : {} });
+          toast.success(data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId });
           setUser([])
           setIsAuth(false)
           navigate('/login')
         }
       } catch (error) {
-        toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {} })
+        toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
       }
     }
 

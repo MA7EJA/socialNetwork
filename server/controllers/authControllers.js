@@ -17,22 +17,30 @@ const registerUser = tryCatch(async (req, res) => {
     let user = await User.findOne({ email });
 
     if (user) return res.status(400).json({ msg: "Email already exist" });
-
-    const fileUrl = getDataUrl(file);
-
+    
     const hashPassword = await bcrypt.hash(password, 10);
 
-    const myCould = await cloudinary.v2.uploader.upload(fileUrl.content);
+    let profilePicture = null;
+    if (file) {
+      const fileUrl = getDataUrl(file);
+      const myCloud = await cloudinary.v2.uploader.upload(fileUrl.content);
+      profilePicture = {
+        id: myCloud.public_id,
+        url: myCloud.secure_url,
+      };
+    } else {
+      profilePicture = {
+        id: null,
+        url: "https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-512x512-0mhn1054.png",
+      };
+    }
 
     user = await User.create({
       name,
       email,
       password: hashPassword,
       gender,
-      profilePicture: {
-        id: myCould.public_id,
-        url: myCould.secure_url,
-      },
+      profilePicture,
     });
 
     generateToken(user._id, res);
