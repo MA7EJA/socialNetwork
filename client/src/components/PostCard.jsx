@@ -2,8 +2,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import { RiHeartLine } from "react-icons/ri";
 import { RiHeartFill } from "react-icons/ri";
 import { IoChatbox } from "react-icons/io5";
+import { UserData } from '../context/UserContext';
+import { PostData } from '../context/PostContext';
 
 const PostCard = ({ type, value }) => {
+
+    const { user } = UserData();
+    const { likePost, addComment } = PostData()
 
     const videoRef = useRef(null);
     const [isVisible, setIsVisible] = useState(false);
@@ -15,6 +20,12 @@ const PostCard = ({ type, value }) => {
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };
+
+    useEffect(() => {
+        for(let i = 0; i < value.likes.length; i++){
+            if(value.likes[i] === user._id) setIsLike(true)
+        }
+    }, [value, user._id])
 
     useEffect(() => {
     const observer = new IntersectionObserver(
@@ -44,6 +55,23 @@ const PostCard = ({ type, value }) => {
       }
     }
   }, [isVisible]);
+
+  const likeHandler = () => {
+    setIsLike(!isLike)
+
+    likePost(value._id)
+  }
+
+  const [comment, setComment] = useState('')
+
+  const commentHandler = (e) => {
+    e.preventDefault()
+    addComment(value._id, comment, setComment)
+  }
+
+   const toggleShow = () => {
+        setShow(!show);
+    };
 
   return (
     <div>
@@ -96,28 +124,30 @@ const PostCard = ({ type, value }) => {
             </div>
             <div className='flex items-center justify-between text-gray-600 dark:text-gray-300'>
                 <div className='flex items-center'>
-                    <span onClick={() => setIsLike(!isLike)} className='p-3 text-red-500 text-2xl cursor-pointer'>
+                    <span onClick={likeHandler} className='p-3 text-red-500 text-2xl cursor-pointer'>
                         { isLike ? <RiHeartFill/> : <RiHeartLine/>}
                     </span>
                     <button>
                         {value.likes.length} Likes
                     </button>
                 </div>
-                <button className='flex justify-center items-center gap-2' onClick={() => {setShow(!show)}}>
+                <button className='flex justify-center items-center gap-2' onClick={toggleShow}>
                     <IoChatbox className='text-xl'/>
                     <span className='mr-4'>{value.comments.length} Comments</span>
                 </button>
             </div>
             {
-                show && <form className='flex gap-3'>
+                show && <form className='flex gap-3' onSubmit={commentHandler}>
                     <input 
                         type="text" 
                         id="comment-input" 
                         className="ml-3 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[95%] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                         placeholder="Enter Comment"
+                        value={comment}
+                        onChange={e => setComment(e.target.value)}
                     />
                     <button 
-                        type="button" 
+                        type="submit" 
                         className="w-32 h-[42px] mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                     >
                         Add
@@ -128,7 +158,7 @@ const PostCard = ({ type, value }) => {
             <div className='my-4'>
                 <div className='max-h-52 overflow-y-auto'>
                     { value.comments && value.comments.length > 0 ? value.comments.map((e) => (
-                        <Comment/>
+                        <Comment value={e} ket={e._id}/>
                     )) : <p className='text-gray-400 dark:text-gray-200 mx-4'>No Comments</p>}
                 </div>
             </div>
@@ -139,14 +169,14 @@ const PostCard = ({ type, value }) => {
 
 export default PostCard
 
-export const Comment = () => {
+export const Comment = ({value}) => {
     return (
         <>
         <div className='flex items-center space-x-2 mt-2'>
-            <img className="w-10 h-10 rounded-full mx-2" src="https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-512x512-0mhn1054.png" alt="Rounded avatar"></img>
+            <img className="w-10 h-10 rounded-full mx-2" src={value.avatar || 'https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-512x512-0mhn1054.png'} alt="Rounded avatar"></img>
             <div>
-                <p className='text-gray-600 dark:text-gray-100 font-semibold mb-2'>User Name</p>
-                <p className='text-gray-400 dark:text-gray-200 mr-2'>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here</p>
+                <p className='text-gray-600 dark:text-gray-100 font-semibold mb-2'>{value.name}</p>
+                <p className='text-gray-400 dark:text-gray-200 mr-2'>{value.comment}</p>
             </div>
         </div>
         <hr className="h-px my-4 mx-auto bg-gray-200 border-0 dark:bg-gray-700 max-w-[90%]"></hr>

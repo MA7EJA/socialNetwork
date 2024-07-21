@@ -88,7 +88,7 @@ const commentOnPost = tryCatch(async (req, res) => {
 
     post.comments.comment = req.body.comment;
 
-    post.comments.push({ user: req.user._id, name: req.user.name, comment: req.body.comment});
+    post.comments.push({ user: req.user._id, name: req.user.name, comment: req.body.comment, avatar: req.user.profilePicture.url});
 
     await post.save()
 

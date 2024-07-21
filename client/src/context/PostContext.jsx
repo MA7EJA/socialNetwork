@@ -41,11 +41,34 @@ export const PostContextProvider = ({ children }) => {
         }
     }
 
+    async function likePost(id){
+        const toastId = toast.loading("Processing...", { style: isDarkMode ? darkStyle : {} });
+        try {
+            const { data } = await axios.post('/api/post/like/' + id)
+            toast.success(data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
+            fetchPost()
+        } catch (error) {
+            toast.error(error.response.data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
+        }
+    }
+
+    async function addComment(id, comment, setComment){
+        const toastId = toast.loading("Processing...", { style: isDarkMode ? darkStyle : {} });
+        try {
+            const { data } = await axios.post('/api/post/comment/' + id, { comment})
+            toast.success(data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
+            fetchPost()
+            setComment('')
+        } catch (error) {
+            toast.error(error.response.data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
+        }
+    }
+
     useEffect(() => {
         fetchPost();
     }, [])
 
-    return <PostContext.Provider value={{ posts, reels, addPost }}>
+    return <PostContext.Provider value={{ posts, reels, addPost, likePost, addComment }}>
         {children}
     </PostContext.Provider>
 }

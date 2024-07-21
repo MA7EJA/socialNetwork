@@ -12,7 +12,7 @@ const postSchema = new mongoose.Schema({
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
   },
   createdAt: {
     type: Date,
@@ -37,6 +37,9 @@ const postSchema = new mongoose.Schema({
       comment: {
         type: String,
         required: true,
+      },
+      avatar: {
+        type: String,
       },
     },
   ],
