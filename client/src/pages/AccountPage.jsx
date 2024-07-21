@@ -1,12 +1,26 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { UserData } from '../context/UserContext';
+import { PostData } from '../context/PostContext';
+import PostCard from '../components/PostCard';
 
 const AccountPage = ({ user }) => {
 
     const navigate = useNavigate()
 
     const { logoutUser } = UserData()
+
+    const { posts, reels } = PostData()
+    let myPosts;
+
+    if(posts){
+        myPosts = posts.filter((post) => post.owner._id === user._id);
+    }
+
+    let myReels;
+    if(reels){
+        myReels = reels.filter((reel) => reel.owner._id === user._id)
+    }
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -18,9 +32,11 @@ const AccountPage = ({ user }) => {
         logoutUser(navigate)
     }
 
+    const [type, setType] = useState('post')
+
   return (
-    <div className="lg:ml-64 flex justify-center items-center min-h-screen">
-        <div className="w-[95%] max-w-lg bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div className='lg:ml-[248px] p-2'>
+        <div className="mb-4 mx-auto w-full max-w-lg bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <div className="flex justify-end px-4 pt-4">
                 <button onClick={toggleDropdown} id="dropdownButton" data-dropdown-toggle="dropdown" className="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5" type="button">
                     <span className="sr-only">Open dropdown</span>
@@ -52,8 +68,34 @@ const AccountPage = ({ user }) => {
                     <dd className="text-gray-500 dark:text-gray-400">Following</dd>
                 </div>
             </dl>
+            </div>
         </div>
+        <div className='mx-auto w-full max-w-lg flex justify-around mb-6'>
+            <button onClick={() => setType('post')} className='text-gray-600 dark:text-gray-200 w-32 border-b-[1px] pb-4 text-lg border-b-wid'>Posts</button>
+            <button onClick={() => setType('reel')} className='text-gray-600 dark:text-gray-200 w-32 border-b-[1px] pb-4 text-lg border-b-wid'>Reels</button>
         </div>
+        {
+            type === "post" && (
+                <>
+                    {
+                        myPosts && myPosts.length > 0 ? myPosts.map((e) => (
+                            <PostCard type={'post'} value={e} key={e._id}/>
+                        )) : <p>No Post Available</p>
+                    }
+                </>
+            )
+        }
+        {
+            type === "reel" && (
+                <>
+                    {
+                        myReels && myReels.length > 0 ? myReels.map((e) => (
+                            <PostCard key={myReels[0]._id} value={myReels[0]} type={'reel'}/>
+                        )) : <p>No Reel Available</p>
+                    }
+                </>
+            )
+        }
     </div>
   )
 }
