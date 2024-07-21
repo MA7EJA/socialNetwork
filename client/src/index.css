@@ -6,16 +6,32 @@
 :root {
     --background-color: white;
     --text-color: rgb(17 24 39);
+    --scrollbar-color: rgb(67, 77, 98);
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         --background-color: rgb(17 24 39);
         --text-color: white;
+        --scrollbar-color: rgb(74, 85, 112);
     }
 }
 
 body {
     background-color: var(--background-color);
     color: var(--text-color);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-color);
+    border-radius: 10px;
 }

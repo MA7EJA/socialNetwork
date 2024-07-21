@@ -18,7 +18,7 @@ const AddPost = ({ type }) => {
   };
 
   return (
-    <form className="max-w-lg mx-auto bg-gray-50 dark:bg-gray-800 p-4 rounded-md">
+    <form className="mb-6 mt-4 max-w-lg mx-auto bg-gray-50 shadow dark:bg-gray-800 p-4 rounded-md">
       <input 
         value={caption} 
         onChange={e => setCaption(e.target.value)} 
