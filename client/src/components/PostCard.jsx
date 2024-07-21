@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { RiHeartLine } from "react-icons/ri";
 import { RiHeartFill } from "react-icons/ri";
 import { IoChatbox } from "react-icons/io5";
 
 const PostCard = ({ type, value }) => {
+
+    const videoRef = useRef(null);
+    const [isVisible, setIsVisible] = useState(false);
 
     const [isLike, setIsLike] = useState(false)
     const [show, setShow] = useState(false)
@@ -13,9 +16,38 @@ const PostCard = ({ type, value }) => {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
+    useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.5 }
+    );
+
+    if (videoRef.current) {
+      observer.observe(videoRef.current);
+    }
+
+    return () => {
+      if (videoRef.current) {
+        observer.unobserve(videoRef.current);
+      }
+    };
+  }, [videoRef]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isVisible) {
+        videoRef.current.play();
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [isVisible]);
+
   return (
     <div>
-        <div className='mx-auto w-full max-w-lg bg-gray-50 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700'>
+        <div className='mx-auto w-full max-w-lg bg-gray-50 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-8'>
             <div className="flex items-center m-4 justify-between">
                 <div className='flex items-center'>
                     <img className="w-10 h-10 rounded-full mr-4" src={ value.owner.profilePicture.url || 'https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-512x512-0mhn1054.png'} alt=""/>
@@ -51,10 +83,11 @@ const PostCard = ({ type, value }) => {
                     />
                 ) : (
                     <video 
+                    ref={videoRef}
                     src={value.post.url}
                     className="absolute top-0 left-0 w-full h-full object-cover rounded-lg" 
                     controlsList='nodownload'
-                    autoPlay
+                    autoPlay={false}
                     autoFocus
                     controls
                     alt="View"

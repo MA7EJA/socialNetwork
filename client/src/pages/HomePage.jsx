@@ -11,8 +11,10 @@ const HomePage = () => {
     <div className='lg:ml-64 p-2'>
       <AddPost type="post"/>
       {posts && posts.length > 0 ? (
-        posts.map((e) => <PostCard value={e} key={e._id} type={'post'}/>)
-      ) : <p>Loading...</p>}
+        posts.map(e => (
+          <PostCard value={e} key={e._id} type={'post'}/>
+        ))
+      ) : (<p>Loading...</p>)}
     </div>
   )
 }
