@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { PostData } from '../context/PostContext';
 
 const AddPost = ({ type }) => {
   const [caption, setCaption] = useState('');
   const [file, setFile] = useState(null);
   const [filePrev, setFilePrev] = useState(null);
+
+  const { addPost } = PostData(); 
 
   const changeFileHandler = (e) => {
     const file = e.target.files[0];
@@ -17,8 +20,18 @@ const AddPost = ({ type }) => {
     };
   };
 
+  const submitHandler = (e) => {
+    e.preventDefault()
+    const formdata = new FormData()
+
+    formdata.append('caption', caption)
+    formdata.append('file', file)
+
+    addPost(formdata, setCaption, setFile, setFilePrev, type)
+  }
+
   return (
-    <form className="mb-6 mt-4 max-w-lg mx-auto bg-gray-50 shadow dark:bg-gray-800 p-4 rounded-md">
+    <form onSubmit={submitHandler} className="mb-6 mt-4 max-w-lg mx-auto bg-gray-50 shadow dark:bg-gray-800 p-4 rounded-md">
       <input 
         value={caption} 
         onChange={e => setCaption(e.target.value)} 
@@ -56,7 +69,7 @@ const AddPost = ({ type }) => {
         )}
       </div>
       <button 
-        type="button" 
+        type="submit" 
         className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
       >
         Add Post

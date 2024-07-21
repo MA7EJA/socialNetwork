@@ -3,7 +3,7 @@ import { RiHeartLine } from "react-icons/ri";
 import { RiHeartFill } from "react-icons/ri";
 import { IoChatbox } from "react-icons/io5";
 
-const PostCard = ({ type }) => {
+const PostCard = ({ type, value }) => {
 
     const [isLike, setIsLike] = useState(false)
     const [show, setShow] = useState(false)
@@ -18,9 +18,9 @@ const PostCard = ({ type }) => {
         <div className='mx-auto w-full max-w-lg bg-gray-50 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700'>
             <div className="flex items-center m-4 justify-between">
                 <div className='flex items-center'>
-                    <img className="w-10 h-10 rounded-full mr-4" src="/docs/images/people/profile-picture-5.jpg" alt=""/>
+                    <img className="w-10 h-10 rounded-full mr-4" src={ value.owner.profilePicture.url || 'https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-512x512-0mhn1054.png'} alt=""/>
                     <div className="font-medium dark:text-white">
-                        <div className="text-lg text-gray-700 dark:text-gray-50">Jese Leos</div>
+                        <div className="text-lg text-gray-700 dark:text-gray-50">{value.owner.name}</div>
                     </div>
                 </div>
                 <div className="flex items-center">
@@ -40,18 +40,18 @@ const PostCard = ({ type }) => {
                 </div>
             </div>
             <div className='px-4 py-2'>
-                <p className="tracking-tight text-gray-600 md:text-lg dark:text-gray-300">dawd awd awdaw dawd</p>
+                <p className="tracking-tight text-gray-600 md:text-lg dark:text-gray-300">{value.caption}</p>
             </div>
             <div className="relative w-full mb-5" style={{ paddingTop: '125%' }}>
                 {type === 'post' ? (
                     <img 
-                    src="" 
+                    src={value.post.url} 
                     className="absolute top-0 left-0 w-full h-full object-cover rounded-lg" 
                     alt="View"
                     />
                 ) : (
                     <video 
-                    src=""
+                    src={value.post.url}
                     className="absolute top-0 left-0 w-full h-full object-cover rounded-lg" 
                     controlsList='nodownload'
                     autoPlay
@@ -67,12 +67,12 @@ const PostCard = ({ type }) => {
                         { isLike ? <RiHeartFill/> : <RiHeartLine/>}
                     </span>
                     <button>
-                        31 Likes
+                        {value.likes.length} Likes
                     </button>
                 </div>
                 <button className='flex justify-center items-center gap-2' onClick={() => {setShow(!show)}}>
                     <IoChatbox className='text-xl'/>
-                    <span className='mr-4'>4 Comments</span>
+                    <span className='mr-4'>{value.comments.length} Comments</span>
                 </button>
             </div>
             {
@@ -94,10 +94,9 @@ const PostCard = ({ type }) => {
             <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700"></hr>
             <div className='my-4'>
                 <div className='max-h-52 overflow-y-auto'>
-                    <Comment/>
-                    <Comment/>
-                    <Comment/>
-                    <Comment/>
+                    { value.comments && value.comments.length > 0 ? value.comments.map((e) => (
+                        <Comment/>
+                    )) : <p className='text-gray-400 dark:text-gray-200 mx-4'>No Comments</p>}
                 </div>
             </div>
         </div>
