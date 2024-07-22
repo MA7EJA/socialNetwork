@@ -4,6 +4,7 @@ import { PostData } from '../context/PostContext';
 import PostCard from '../components/PostCard';
 import { Loading } from '../components/Loading';
 import axios from 'axios';
+import { UserData } from '../context/UserContext';
 
 const UserAccountPage = ({ user: loggedInUser }) => {
 
@@ -51,6 +52,21 @@ const UserAccountPage = ({ user: loggedInUser }) => {
 
     const [type, setType] = useState('post')
 
+    const [followed, setFollowed] = useState(false)
+
+    const { followUser } = UserData()
+
+    const followHandler = async () => {
+        setFollowed(!followed)
+        await followUser(user._id)
+        await fetchUser()
+    }
+
+    const followers = user.followers
+    useEffect(() => {
+        if(followers && followers.includes(loggedInUser._id)) setFollowed(true)
+    }, [user])
+
   return (
     <>
     { loading ? <Loading/> : <div className='lg:ml-[248px] p-2'>
@@ -82,6 +98,11 @@ const UserAccountPage = ({ user: loggedInUser }) => {
                     <dd className="text-gray-500 dark:text-gray-400">Following</dd>
                 </div>
             </dl>
+            { user._id === loggedInUser._id ? "" : <div className='flex flex-col items-center justify-start w-full mb-2'>
+                <button onClick={followHandler} type="button" className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm w-40 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
+                    {followed ? 'UnFollow' : 'Follow'}
+                </button>
+            </div>}
             </div>
         </div>
         <div className='mx-auto w-full max-w-lg flex justify-around mb-6'>
