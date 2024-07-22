@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Form, useNavigate } from 'react-router-dom';
 import { UserData } from '../context/UserContext';
 import { PostData } from '../context/PostContext';
 import PostCard from '../components/PostCard';
 import Modal from '../components/Modal';
 import axios from 'axios';
+import { MdModeEdit } from "react-icons/md";
+
 
 const AccountPage = ({ user }) => {
 
     const navigate = useNavigate()
 
-    const { logoutUser } = UserData()
+    const { logoutUser, updateProfilePicture } = UserData()
 
     const { posts, reels } = PostData()
     let myPosts;
@@ -52,9 +54,32 @@ const AccountPage = ({ user }) => {
         }
     }
 
+    const [file, setFile] = useState('')
+    const [fileChanged, setFileChanged] = useState(false);
+    const [previewUrl, setPreviewUrl] = useState(user.profilePicture.url);
+
+    const changeFileHandler = (e) => {
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+            const imageUrl = URL.createObjectURL(selectedFile);
+            setFile(selectedFile);
+            setPreviewUrl(imageUrl);
+            setFileChanged(true);
+        }
+    }
+
+    const changeImageHandler = () => {
+        const formdata = new FormData()
+
+        formdata.append('file', file)
+        updateProfilePicture(user._id, formdata)
+    }
+
     useEffect(() => {
         followData()
     }, [user])
+
+    const [showInput, setShowInput] = useState(false)
 
   return (
     <>
@@ -72,13 +97,25 @@ const AccountPage = ({ user }) => {
                {isDropdownOpen ?  <div id="dropdown" className="z-10 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute mt-11">
                     <ul className="py-2" aria-labelledby="dropdownButton">
                     <li>
-                        <a onClick={logoutHandler} href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</a>
+                        <a onClick={logoutHandler} href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Edit</a>
+                    </li>
+                    <li>
+                        <a onClick={logoutHandler} href="#" className="block px-4 py-2 text-sm text-red-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-200 dark:hover:text-white text-center">Logout</a>
                     </li>
                     </ul>
                 </div> : ''}
             </div>
             <div className="flex flex-col items-center">
-                <img className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover" src={ user.profilePicture.url || 'https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-512x512-0mhn1054.png'} alt={user.profilePicture.url || 'Avatar'}/>
+                <div className="flex items-center justify-center w-24">
+                    <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-26 rounded-lg cursor-pointer">
+                        <img className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover" src={previewUrl} alt={user.profilePicture.url || 'Avatar'}/>
+                        <input id="dropzone-file" onChange={changeFileHandler} required type="file" className="hidden" />
+                        <MdModeEdit className='absolute ml-20 mt-16 text-2xl text-gray-800 dark:text-gray-200 bg-blue-600 w-8 h-8 p-2 rounded-full'/>
+                    </label>
+                </div> 
+                {fileChanged && (
+                    <button onClick={changeImageHandler} className="py-2.5 px-5 me-2 ml-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Update Image</button>
+                )}
                 <h5 className="mb-1 text-2xl font-medium text-gray-900 dark:text-white">{user.name}</h5>
                 <span className="text-sm text-gray-500 dark:text-gray-400">{user.email}</span>
             </div>

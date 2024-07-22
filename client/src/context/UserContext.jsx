@@ -87,12 +87,23 @@ export const UserContextProvider = ({ children }) => {
       }
     }
 
+    async function updateProfilePicture(id, formdata) {
+       const toastId = toast.loading("Processing...", { style: isDarkMode ? darkStyle : {} });
+      try {
+        const { data } = await axios.put('/api/user/' + id, formdata)
+
+        toast.success(data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId });
+      } catch (error) {
+        toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
+      }
+    }
+
     useEffect(() => {
       fatchUser()
     }, [])
 
     return (
-      <UserContext.Provider value={{ loginUser, isAuth, setIsAuth, user, setUser, loading, logoutUser, registerUser, followUser }}>
+      <UserContext.Provider value={{ loginUser, isAuth, setIsAuth, user, setUser, loading, logoutUser, registerUser, followUser, updateProfilePicture }}>
         {children}
         <Toaster/>
       </UserContext.Provider>
