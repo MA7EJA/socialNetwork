@@ -79,11 +79,23 @@ export const PostContextProvider = ({ children }) => {
         }
     }
 
+    async function deleteComment(id, commentId){
+        const toastId = toast.loading("Processing...", { style: isDarkMode ? darkStyle : {} });
+        try {
+            const { data } = await axios.delete(`/api/post/comment/${id}?commentId=${commentId}`)
+
+            toast.success(data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
+            fetchPost()
+        } catch (error) {
+            toast.error(error.response.data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
+        }
+    }
+
     useEffect(() => {
         fetchPost();
     }, [])
 
-    return <PostContext.Provider value={{ posts, reels, addPost, likePost, addComment, loading, fetchPost, deletePost }}>
+    return <PostContext.Provider value={{ posts, reels, addPost, likePost, addComment, loading, fetchPost, deletePost, deleteComment }}>
         {children}
     </PostContext.Provider>
 }

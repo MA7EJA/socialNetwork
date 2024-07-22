@@ -100,9 +100,9 @@ const deleteComment = tryCatch(async (req, res) => {
 
     if(!post) return res.status(404).json({ msg: "No post with this ID"});
 
-    if(!req.body.commentId) return res.status(404).json({ msg: "No Comment with this ID"});
+    if(!req.query.commentId) return res.status(404).json({ msg: "No Comment with this ID"});
 
-    const commentIndex = post.comments.findIndex((item) => item._id.toString() === req.body.commentId.toString());
+    const commentIndex = post.comments.findIndex((item) => item._id.toString() === req.query.commentId.toString());
 
     if(commentIndex === -1) return res.status(400).json({ msg: "Comment not Found"});
 
