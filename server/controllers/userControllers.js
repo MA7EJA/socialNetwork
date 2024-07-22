@@ -49,7 +49,7 @@ const followAndUnfollowUser = tryCatch(async (req, res) => {
 });
 
 const userFollowersAndFollowingData = tryCatch(async (req, res) => {
-    const user = await User.findById(req.params._id).select('-password').populate('followers', '-password').populate("followings", "-password");
+    const user = await User.findById(req.params.id).select('-password').populate('followers', '-password').populate("followings", "-password");
 
     const followers = user.followers;
     const followings = user.followings

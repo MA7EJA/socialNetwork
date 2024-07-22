@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { UserData } from '../context/UserContext';
 import { PostData } from '../context/PostContext';
 import PostCard from '../components/PostCard';
+import Modal from '../components/Modal';
+import axios from 'axios';
 
 const AccountPage = ({ user }) => {
 
@@ -34,7 +36,30 @@ const AccountPage = ({ user }) => {
 
     const [type, setType] = useState('post')
 
+    const [show, setShow] = useState(false)
+    const [show1, setShow1] = useState(false)
+
+    const [followersData, setFollowersData] = useState([])
+    const [followingsData, setFollowingsData] = useState([])
+
+    async function followData(){
+        try {
+            const {data} = await axios.get('/api/user/follow/data/' + user._id);
+            setFollowersData(data.followers)
+            setFollowingsData(data.followings)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        followData()
+    }, [user])
+
   return (
+    <>
+    { show && <Modal value={followersData} title={'Followers'} setShow={setShow}/>}
+    { show1 && <Modal value={followingsData} title={'Followings'} setShow={setShow1}/>}
     <div className='lg:ml-[248px] p-2'>
         <div className="mb-4 mx-auto w-full max-w-lg bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <div className="flex justify-end px-4 pt-4">
@@ -59,11 +84,11 @@ const AccountPage = ({ user }) => {
             </div>
             <div className=" bg-white rounded-lg dark:bg-gray-800" id="stats" role="tabpanel" aria-labelledby="stats-tab">
             <dl className="grid max-w-screen-xl grid-cols-2 gap-16 p-4 mx-auto text-gray-900 dark:text-white sm:p-8">
-                <div className="flex flex-col items-center justify-center">
+                <div className="flex flex-col items-center justify-center cursor-pointer" onClick={() => setShow(true)}>
                     <dt className="mb-2 text-2xl font-extrabold">{user.followers.length}</dt>
                     <dd className="text-gray-500 dark:text-gray-400">Followers</dd>
                 </div>
-                <div className="flex flex-col items-center justify-center">
+                <div className="flex flex-col items-center justify-center cursor-pointer" onClick={() => setShow1(true)}>
                     <dt className="mb-2 text-2xl font-extrabold">{user.followings.length}</dt>
                     <dd className="text-gray-500 dark:text-gray-400">Following</dd>
                 </div>
@@ -97,6 +122,7 @@ const AccountPage = ({ user }) => {
             )
         }
     </div>
+    </>
   )
 }
 
