@@ -11,7 +11,7 @@ import { RiDeleteBin6Fill } from "react-icons/ri";
 const PostCard = ({ type, value }) => {
 
     const { user } = UserData();
-    const { likePost, addComment } = PostData()
+    const { likePost, addComment, deletePost } = PostData()
 
     const videoRef = useRef(null);
     const [isVisible, setIsVisible] = useState(false);
@@ -78,6 +78,10 @@ const PostCard = ({ type, value }) => {
         setShow(!show);
     };
 
+    const deleteHandler = () => {
+        deletePost(value._id)
+    }
+
   return (
     <div>
         <div className='mx-auto w-full max-w-lg bg-gray-50 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-8'>
@@ -96,10 +100,13 @@ const PostCard = ({ type, value }) => {
                             <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
                         </svg>
                     </button>
-                    {isDropdownOpen ?  <div id="dropdown" className="z-10 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute mt-28 -ml-36">
+                    {isDropdownOpen ?  <div id="dropdown" className="z-10 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute mt-36 -ml-36">
                         <ul className="py-2" aria-labelledby="dropdownButton">
                         <li>
-                            <a href='#' className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Link</a>
+                            <a href='#' className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Edit</a>
+                        </li>
+                        <li>
+                            <button onClick={deleteHandler} className="block px-4 py-2 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-400 dark:hover:text-red-500 w-full">Delete</button>
                         </li>
                         </ul>
                     </div> : ''}

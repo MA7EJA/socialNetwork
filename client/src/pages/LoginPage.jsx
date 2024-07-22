@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { UserData } from '../context/UserContext';
+import { PostData } from '../context/PostContext';
 
 const LoginPage = () => {
 
@@ -10,10 +11,11 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
 
   const { loginUser, loading } = UserData()
+  const { fetchPosts } = PostData()
 
   const submitHandler = (e) => {
     e.preventDefault();
-    loginUser(email, password, navigate);
+    loginUser(email, password, navigate, fetchPosts);
   }
 
   return (

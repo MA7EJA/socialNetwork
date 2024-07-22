@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { UserData } from '../context/UserContext';
+import { PostData } from '../context/PostContext';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -12,6 +13,8 @@ const RegisterPage = () => {
   const [file, setFile] = useState(null);
 
   const { registerUser, loading } = UserData();
+
+  const { fetchPosts } = PostData()
 
   const changeFileHandler = (e) => {
     const file = e.target.files[0];
@@ -28,7 +31,7 @@ const RegisterPage = () => {
     formdata.append('gender', gender);
     if (file) formdata.append('file', file);
 
-    registerUser(formdata, navigate);
+    registerUser(formdata, navigate, fetchPosts);
   };
 
   return (

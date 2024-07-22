@@ -16,7 +16,7 @@ export const UserContextProvider = ({ children }) => {
     const [ isAuth, setIsAuth ] = useState(false)
     const [ loading, setLoading ] = useState(true)
 
-    async function registerUser(formdata, navigate){
+    async function registerUser(formdata, navigate, fetchPosts){
       const toastId = toast.loading("Processing...", { style: isDarkMode ? darkStyle : {} });
       try {
         const { data } = await axios.post('/api/auth/register', formdata);
@@ -25,12 +25,13 @@ export const UserContextProvider = ({ children }) => {
         setIsAuth(true);
         setUser(data.user)
         navigate('/')
+        fetchPosts()
       } catch (err) {
         toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
       }
     };
 
-    async function loginUser(email, password, navigate){
+    async function loginUser(email, password, navigate, fetchPosts){
       const toastId = toast.loading("Processing...", { style: isDarkMode ? darkStyle : {} });
       try {
         const { data } = await axios.post('/api/auth/login', {email, password});
@@ -39,6 +40,7 @@ export const UserContextProvider = ({ children }) => {
         setIsAuth(true);
         setUser(data.user)
         navigate('/')
+        fetchPosts()
       } catch (err) {
         toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
       }
