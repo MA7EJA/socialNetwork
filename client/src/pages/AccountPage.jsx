@@ -6,6 +6,7 @@ import PostCard from '../components/PostCard';
 import Modal from '../components/Modal';
 import axios from 'axios';
 import { MdModeEdit } from "react-icons/md";
+import toast from 'react-hot-toast';
 
 
 const AccountPage = ({ user }) => {
@@ -88,8 +89,68 @@ const AccountPage = ({ user }) => {
         setShowInput(false)
     }
 
+    const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const darkStyle = {
+      background: 'rgb(31 41 55)',
+      color: '#fff',
+    };
+
+    const [showUpdatePassword, setShowUpdatePassword] = useState(false)
+
+    const [oldPassword, setOldPassword] = useState('')
+    const [newPassword, setNewPassword] = useState('')
+
+    async function updatePassword(e){
+        e.preventDefault()
+        const toastId = toast.loading("Processing...", { style: isDarkMode ? darkStyle : {} });
+        try {
+            const { data } = await axios.post('/api/user/' + user._id, {oldPassword, newPassword})
+
+            toast.success(data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId });
+            setOldPassword('')
+            setNewPassword('')
+            setShowUpdatePassword(false)
+        } catch (err) {
+             toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
+        }
+    }
+
   return (
     <>
+    {showUpdatePassword && <>
+        <div className='z-[999] fixed w-full h-screen bg-black bg-opacity-50 flex justify-center items-center mx-auto'>
+            <div id="authentication-modal" tabIndex="-1" aria-hidden="true" className="lg:ml-64 w-full max-w-md h-auto bg-white rounded-lg shadow dark:bg-gray-700">
+            <div className="relative p-4 w-full max-w-md max-h-full">
+                <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                            Change your Password
+                        </h3>
+                        <button onClick={() => setShowUpdatePassword(!showUpdatePassword)} type="button" className="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal">
+                            <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                            <span className="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <div className="p-4 md:p-5">
+                        <form onSubmit={updatePassword} className="space-y-4" action="#">
+                            <div>
+                                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Current Password</label>
+                                <input value={oldPassword} onChange={e => setOldPassword(e.target.value)} type="password" name="oldPass" id="oldPass" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="••••••••" required />
+                            </div>
+                            <div>
+                                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">New password</label>
+                                <input value={newPassword} onChange={e => setNewPassword(e.target.value)} type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
+                            </div>
+                            <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Update Password</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div> 
+    </>}
     { show && <Modal value={followersData} title={'Followers'} setShow={setShow}/>}
     { show1 && <Modal value={followingsData} title={'Followings'} setShow={setShow1}/>}
     <div className='lg:ml-[248px] p-2'>
@@ -105,6 +166,9 @@ const AccountPage = ({ user }) => {
                     <ul className="py-2" aria-labelledby="dropdownButton">
                     <li>
                         <button onClick={() => (setShowInput(true), setIsDropdownOpen(false))} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white w-full">Edit</button>
+                    </li>
+                    <li>
+                        <button onClick={() => setShowUpdatePassword(!showUpdatePassword)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white w-full">Update Password</button>
                     </li>
                     <li>
                         <a onClick={logoutHandler} href="#" className="block px-4 py-2 text-sm text-red-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-200 dark:hover:text-white text-center">Logout</a>
