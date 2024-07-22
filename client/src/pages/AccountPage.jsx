@@ -12,7 +12,7 @@ const AccountPage = ({ user }) => {
 
     const navigate = useNavigate()
 
-    const { logoutUser, updateProfilePicture } = UserData()
+    const { logoutUser, updateProfilePicture, updateProfileName } = UserData()
 
     const { posts, reels } = PostData()
     let myPosts;
@@ -73,6 +73,7 @@ const AccountPage = ({ user }) => {
 
         formdata.append('file', file)
         updateProfilePicture(user._id, formdata)
+        setFileChanged(false);
     }
 
     useEffect(() => {
@@ -80,6 +81,12 @@ const AccountPage = ({ user }) => {
     }, [user])
 
     const [showInput, setShowInput] = useState(false)
+    const [name, setName] = useState(user.name || '')
+
+    const UpdateName = () => {
+        updateProfileName(user._id, name, setName )
+        setShowInput(false)
+    }
 
   return (
     <>
@@ -97,7 +104,7 @@ const AccountPage = ({ user }) => {
                {isDropdownOpen ?  <div id="dropdown" className="z-10 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute mt-11">
                     <ul className="py-2" aria-labelledby="dropdownButton">
                     <li>
-                        <a onClick={logoutHandler} href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Edit</a>
+                        <button onClick={() => (setShowInput(true), setIsDropdownOpen(false))} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white w-full">Edit</button>
                     </li>
                     <li>
                         <a onClick={logoutHandler} href="#" className="block px-4 py-2 text-sm text-red-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-200 dark:hover:text-white text-center">Logout</a>
@@ -116,7 +123,20 @@ const AccountPage = ({ user }) => {
                 {fileChanged && (
                     <button onClick={changeImageHandler} className="py-2.5 px-5 me-2 ml-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Update Image</button>
                 )}
-                <h5 className="mb-1 text-2xl font-medium text-gray-900 dark:text-white">{user.name}</h5>
+                {showInput ? <>
+                    <input 
+                        value={name}
+                        onChange={e => setName(e.target.value)} 
+                        type="text" 
+                        className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-52 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                        placeholder="Enter Name"
+                        required
+                    />
+                    <div className='flex items-center ml-2'>
+                        <button onClick={UpdateName} className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Update Name</button>
+                        <button onClick={() => setShowInput(false)} className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-red-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-red-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-red-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
+                    </div>
+                </> : <h5 className="mb-1 text-2xl font-medium text-gray-900 dark:text-white">{user.name}</h5>}
                 <span className="text-sm text-gray-500 dark:text-gray-400">{user.email}</span>
             </div>
             <div className=" bg-white rounded-lg dark:bg-gray-800" id="stats" role="tabpanel" aria-labelledby="stats-tab">

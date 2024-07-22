@@ -82,7 +82,7 @@ export const UserContextProvider = ({ children }) => {
         const { data } = await axios.post('/api/user/follow/' + id)
         toast.success(data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId });
         fetchUser()
-      } catch (error) {
+      } catch (err) {
         toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
       }
     }
@@ -93,7 +93,21 @@ export const UserContextProvider = ({ children }) => {
         const { data } = await axios.put('/api/user/' + id, formdata)
 
         toast.success(data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId });
-      } catch (error) {
+        fetchUser()
+      } catch (err) {
+        toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
+      }
+    }
+
+    async function updateProfileName(id, name, setName) {
+       const toastId = toast.loading("Processing...", { style: isDarkMode ? darkStyle : {} });
+      try {
+        const { data } = await axios.put('/api/user/' + id, {name})
+
+        toast.success(data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId });
+        fetchUser()
+        setName('')
+      } catch (err) {
         toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
       }
     }
@@ -103,7 +117,7 @@ export const UserContextProvider = ({ children }) => {
     }, [])
 
     return (
-      <UserContext.Provider value={{ loginUser, isAuth, setIsAuth, user, setUser, loading, logoutUser, registerUser, followUser, updateProfilePicture }}>
+      <UserContext.Provider value={{ loginUser, isAuth, setIsAuth, user, setUser, loading, logoutUser, registerUser, followUser, updateProfilePicture, updateProfileName }}>
         {children}
         <Toaster/>
       </UserContext.Provider>
