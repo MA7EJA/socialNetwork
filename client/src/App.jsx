@@ -10,6 +10,7 @@ import NotFound from './components/NotFound'
 import ReelsPage from './pages/ReelsPage'
 import { Loading } from './components/Loading'
 import UserAccountPage from './pages/UserAccountPage'
+import SearchPage from './pages/SearchPage'
 
 const App = () => {
 
@@ -26,6 +27,7 @@ const App = () => {
             <Route path='/user/:id' element={isAuth ? <UserAccountPage user={user}/> : <LoginPage/>}/>
             <Route path='/login' element={!isAuth ? <LoginPage/> : <HomePage/>}/>
             <Route path='/register' element={!isAuth ? <RegisterPage/> : <HomePage/>}/>
+            <Route path='/search' element={<SearchPage/>}/>
             <Route path='/*' element={<NotFound/>}/>
           </Routes>
         </Suspense>
