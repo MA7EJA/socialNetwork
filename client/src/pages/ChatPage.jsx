@@ -20,9 +20,23 @@ const ChatPage = () => {
         }
     }
 
+    const getAllChats = async () =>{
+        try {
+            const { data } = await axios.get('/api/message/chats')
+
+            setChats(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         fetchAllUsers()
     }, [query])
+
+    useEffect(() => {
+        getAllChats()
+    }, [])
 
   return (
     <div>ChatPage</div>
