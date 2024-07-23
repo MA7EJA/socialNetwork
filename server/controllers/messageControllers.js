@@ -9,7 +9,7 @@ const sendMessage = tryCatch(async (req, res) => {
 
     if(!recieverId) return res.status(400).json({ msg: "Please Give reciver Id"})
 
-    let chat = Chat.findOne({ users: { $all:[senderId, recieverId]}});
+    let chat = await Chat.findOne({ users: { $all:[senderId, recieverId]}}).exec();
 
     if(!chat){
         chat = new Chat({ users: [senderId, recieverId], latestMessage: { text: message, sender: senderId}});
@@ -40,13 +40,14 @@ const getAllMessages = tryCatch(async (req, res) => {
 });
 
 const getAllChats = tryCatch(async (req, res) => {
-     const chats = await Chat.find({ users: req.user._id }).populate({ path: "user", select: "name profilePicture"})
+     const chats = await Chat.find({ users: req.user._id })
+       .populate({ path: "users", select: "name profilePicture" });
 
-    chats.forEach((e) => {
-        e.users = e.users.filter( (user) => {
-            user._id.toString() !== req.user._id.toString()
-        })
-    })
+    chats.forEach((chat) => {
+      chat.users = chat.users.filter(
+        (user) => user._id.toString() !== req.user._id.toString()
+      );
+    });
 
      res.json(chats)
 })

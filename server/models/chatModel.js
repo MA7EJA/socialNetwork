@@ -7,7 +7,7 @@ const chatSchema = mongoose.Schema({
     sender: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
 },{
-    timestamp: true
+    timestamps: true
 }
 );
 
