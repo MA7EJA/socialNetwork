@@ -245,28 +245,28 @@ export const Comment = ({ value, user, owner, id }) => {
 
     return (
         <>
-        <div className='flex items-center mt-2'>
-            <Link className='mx-2'>
-                <img className="w-10 h-10 rounded-full" src={value.avatar || 'https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-512x512-0mhn1054.png'} alt="Rounded avatar"></img>
-            </Link>
-            <div>
-                <p className='text-gray-600 dark:text-gray-100 font-semibold'>{value.name}</p>
-                <p className='text-gray-400 dark:text-gray-200 mr-2'>{value.comment}</p>
-            </div>
-            {
-                owner === user._id ? '' : <>
-                    {value.user === user._id && 
-                        <button onClick={deleteCommentHandler} className='ml-auto mr-4 text-red-500 hover:text-red-600'>
-                            <RiDeleteBin6Fill/>
-                        </button>}
-                </>
-            }
+            <div className='flex items-center mt-2'>
+                <Link to={`/user/${value.user}`} className='mx-2'>
+                    <img className="w-10 h-10 rounded-full" src={value.avatar} alt="Rounded avatar"></img>
+                </Link>
+                <div>
+                    <p className='text-gray-600 dark:text-gray-100 font-semibold'>{value.name}</p>
+                    <p className='text-gray-400 dark:text-gray-200 mr-2'>{value.comment}</p>
+                </div>
+                {
+                    owner === user._id ? '' : <>
+                        {value.user === user._id && 
+                            <button onClick={deleteCommentHandler} className='ml-auto mr-4 text-red-500 hover:text-red-600'>
+                                <RiDeleteBin6Fill/>
+                            </button>}
+                    </>
+                }
 
-            {owner === user._id && 
-                <button onClick={deleteCommentHandler} className='ml-auto mr-4 text-red-500 hover:text-red-600'>
-                    <RiDeleteBin6Fill/>
-                </button>}
-        </div>
+                {owner === user._id && 
+                    <button onClick={deleteCommentHandler} className='ml-auto mr-4 text-red-500 hover:text-red-600'>
+                        <RiDeleteBin6Fill/>
+                    </button>}
+            </div>
         <hr className="h-px my-4 mx-auto bg-gray-200 border-0 dark:bg-gray-700 max-w-[90%]"></hr>
         </>
     )

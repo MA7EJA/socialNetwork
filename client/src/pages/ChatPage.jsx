@@ -59,7 +59,7 @@ const ChatPage = () => {
         </svg>
         </button>
 
-        <div onClick={() => setShowSide(!showSide)} className={`bg-black opacity-50 z-[998] absolute w-full min-h-screen lg:-left-0 ${showSide ? '' : 'hidden'}`}></div>
+        <div onClick={() => setShowSide(!showSide)} className={`bg-black opacity-50 z-[998] top-0 left-0 p-0 m-0 overflow-hidden absolute w-full min-h-screen lg:-left-0 ${showSide ? '' : 'hidden'}`}></div>
         <aside id="default-sidebar" className={`fixed top-0 left-0 z-[999] w-64 h-screen transition-transform ${showSide ? "" : "-translate-x-full"}`} aria-label="Sidebar">
             <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
                 <ul className="space-y-2 font-medium">
@@ -124,6 +124,16 @@ const ChatPage = () => {
                 </ul>
             </div>
             </aside>
+            <div className='-ml-64 lg:ml-0 px-4'>
+                {selectedChat === null ?(
+                    <div className='flex justify-center items-center flex-col text-center min-h-screen'>
+                        <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white mb-8">Welcome to Your Messages</h1>
+                        <p className="mb-6 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">Dive into your conversations! Select a chat from the list to start messaging with your friends and contacts. </p>
+                    </div>
+                ): (
+                    <div>With</div>
+                )}
+            </div>
         </div>
         </div>
     </>
