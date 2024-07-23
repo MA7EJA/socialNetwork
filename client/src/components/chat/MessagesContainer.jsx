@@ -3,6 +3,7 @@ import { UserData } from '../../context/UserContext'
 import axios from 'axios'
 import { Loading } from '../Loading'
 import Message from './Message'
+import MessageInput from './MessageInput'
 
 const MessagesContainer = ({ selectedChat, setChats}) => {
 
@@ -15,7 +16,6 @@ const MessagesContainer = ({ selectedChat, setChats}) => {
         setLoading(true)
         try {
             const { data } = await axios.get('/api/message/' + selectedChat.users[0]._id)
-            
             setMessages(data)
             setLoading(false)
         } catch (error) {
@@ -25,8 +25,9 @@ const MessagesContainer = ({ selectedChat, setChats}) => {
     }
 
     useEffect(() => {
-        fetchMessage()
-    }, [selectedChat])
+        if (!user) return;
+        fetchMessage();
+    }, [selectedChat, user]);
 
   return (
     <div className='py-3'>{ selectedChat && (
@@ -45,15 +46,16 @@ const MessagesContainer = ({ selectedChat, setChats}) => {
                 </div>
             </div>
             <hr className="w-full h-px mt-4 bg-gray-200 border-0 dark:bg-gray-700"/>
-            <div className='h-full overflow-y-auto'>
+            <div className='h-auto mb-4 overflow-hidden overflow-y-auto'>
                 {loading ? <Loading/> : <>
                     <div>
                         { messages && messages.map((e) => (
-                            <Message message={e.text} ownMessage={e.sender === user._id && true}/>
+                            <Message key={e._id} message={e.text} ownMessage={e.sender && e.sender._id === user._id} sender={e.sender} timestamp={e.createdAt}/>
                         ))}
                     </div>
                 </>}
             </div>
+            <MessageInput setMessages={setMessages} selectedChat={selectedChat}/>
         </>
     )}
     </div>
