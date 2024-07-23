@@ -48,12 +48,19 @@ const ChatPage = ({ user }) => {
         getAllChats()
     }, [])
 
+    async function createNewChat(id){
+        await createChat(id)
+        setSearch(false)
+        getAllChats();
+        setShowSide(!showSide)
+    }
+
   return (
     <>
         <div className='ml-64'>
             <div className='w-full max-w-lg mx-auto'>
             
-        <button onClick={() => setShowSide(!showSide)} data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" className="fixed -ml-[250px] lg:-ml-0 inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+        <button onClick={() => setShowSide(!showSide)} data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" className="fixed -ml-[248px] lg:-ml-0 inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
         <span className="sr-only">Open sidebar</span>
         <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
         <path clipRule="evenodd" fillRule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
@@ -94,8 +101,8 @@ const ChatPage = ({ user }) => {
                         <ul>
                             {users.map((e) => (
                             <li key={e._id} className="pb-3 sm:pb-4">
-                                <Link to={`/user/${e._id}`}>
-                                <div className="flex items-center space-x-4 rtl:space-x-reverse">
+                                <div onClick={() => createNewChat(e._id)}>
+                                <div className="flex items-center space-x-4 rtl:space-x-reverse cursor-pointer">
                                     <div className="flex-shrink-0">
                                     <img className="w-8 h-8 rounded-full" src={e.profilePicture.url} alt={e.name} />
                                     </div>
@@ -108,10 +115,10 @@ const ChatPage = ({ user }) => {
                                     </p>
                                     </div>
                                     <div className="inline-flex items-center text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">
-                                    View
+                                    Chat
                                     </div>
                                 </div>
-                                </Link>
+                                </div>
                             </li>
                             ))}
                         </ul>
@@ -128,8 +135,8 @@ const ChatPage = ({ user }) => {
             <div className='-ml-64 lg:ml-0 px-4'>
                 {selectedChat === null ?(
                     <div className='flex justify-center items-center flex-col text-center min-h-screen'>
-                        <h1 className="text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white mb-8">Welcome <span className='text-blue-700 dark:text-blue-500'>{user.name}</span> to Your Messages</h1>
-                        <p className="mb-6 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">Dive into your conversations! Select a chat from the list to start messaging with your friends and contacts. </p>
+                        <h1 className="text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-4xl dark:text-white mb-8">Welcome <span className='text-blue-700 dark:text-blue-500'>{user.name}</span> to Your Messages</h1>
+                        <p className="mb-6 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-24 dark:text-gray-400">Dive into your conversations! Select a chat from the list to start messaging with your friends and contacts. </p>
                     </div>
                 ): (
                     <div>

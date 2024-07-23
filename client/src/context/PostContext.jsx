@@ -17,6 +17,7 @@ export const PostContextProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
 
     async function fetchPost(){
+        setLoading(true)
         try {
             const { data } = await axios.get('/api/post/all')
 

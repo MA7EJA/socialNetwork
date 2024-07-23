@@ -46,9 +46,9 @@ const MessagesContainer = ({ selectedChat, setChats}) => {
                 </div>
             </div>
             <hr className="w-full h-px mt-4 bg-gray-200 border-0 dark:bg-gray-700"/>
-            <div className='h-auto mb-4 overflow-hidden overflow-y-auto'>
+            <div className='my-4 pr-2 flex justify-center min-h-[60vh] max-h-[60vh] overflow-hidden overflow-y-auto'>
                 {loading ? <Loading/> : <>
-                    <div>
+                    <div className='justify-center'>
                         { messages && messages.map((e) => (
                             <Message key={e._id} message={e.text} ownMessage={e.sender && e.sender._id === user._id} sender={e.sender} timestamp={e.createdAt}/>
                         ))}

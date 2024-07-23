@@ -16,17 +16,14 @@ export const ChatContextProvider = ({ children }) => {
     const [selectedChat, setSelectedChat] = useState(null)
 
     async function createChat(id){
-        const toastId = toast.loading("Processing...", { style: isDarkMode ? darkStyle : {} });
         try {
             const { data } = await axios.post('/api/message', {
-                reciverId: id,
-                message: "hii"
+                recieverId: id,
+                message: "Hi"
             })
-            
-            toast.success(data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId });
 
         } catch (err) {
-            toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {}, id: toastId })
+            toast.error(err.response.data.msg, { style: isDarkMode ? darkStyle : {}})
         }
     }
 
