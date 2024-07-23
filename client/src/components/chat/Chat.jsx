@@ -2,14 +2,20 @@ import React from 'react'
 import { UserData } from '../../context/UserContext';
 import { BsSendCheckFill } from "react-icons/bs";
 
-const Chat = ({ chat, setSelectedChat }) => {
+const Chat = ({ chat, setSelectedChat, onClick }) => {
     const { user: loggedInUser } = UserData()
     let user;
     if(chat) user = chat.users[0]
+
+     const handleClick = () => {
+        setSelectedChat(chat)
+        onClick()
+    }
+
   return (
     <div>
         {user && (
-            <li className='my-4'>
+            <li className='my-4 cursor-pointer' onClick={handleClick}>
                 <div className="flex items-center space-x-4 rtl:space-x-reverse">
                 <div className="flex-shrink-0">
                     <div className="relative">

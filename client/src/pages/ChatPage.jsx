@@ -3,8 +3,9 @@ import { ChatData } from '../context/ChatContext'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import Chat from '../components/chat/Chat'
+import MessagesContainer from '../components/chat/MessagesContainer'
 
-const ChatPage = () => {
+const ChatPage = ({ user }) => {
 
     const { createChat, selectedChat, setSelectedChat, chats, setChats } = ChatData()
 
@@ -119,7 +120,7 @@ const ChatPage = () => {
                     )}
                     <hr className="h-px my-8 bg-gray-400 border-0 dark:bg-gray-500"/>
                     {chats.map((e) => (
-                        <Chat key={e} chat={e} setSelectedChat={setSelectedChat}/>
+                        <Chat key={e} chat={e} setSelectedChat={setSelectedChat} onClick={() => setShowSide(false)}/>
                     ))}
                 </ul>
             </div>
@@ -127,11 +128,13 @@ const ChatPage = () => {
             <div className='-ml-64 lg:ml-0 px-4'>
                 {selectedChat === null ?(
                     <div className='flex justify-center items-center flex-col text-center min-h-screen'>
-                        <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white mb-8">Welcome to Your Messages</h1>
+                        <h1 className="text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white mb-8">Welcome <span className='text-blue-700 dark:text-blue-500'>{user.name}</span> to Your Messages</h1>
                         <p className="mb-6 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">Dive into your conversations! Select a chat from the list to start messaging with your friends and contacts. </p>
                     </div>
                 ): (
-                    <div>With</div>
+                    <div>
+                        <MessagesContainer selectedChat={selectedChat} setChats={setChats}/>
+                    </div>
                 )}
             </div>
         </div>

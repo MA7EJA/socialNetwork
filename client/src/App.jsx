@@ -29,7 +29,7 @@ const App = () => {
             <Route path='/login' element={!isAuth ? <LoginPage/> : <HomePage/>}/>
             <Route path='/register' element={!isAuth ? <RegisterPage/> : <HomePage/>}/>
             <Route path='/search' element={isAuth ? <SearchPage/> : <LoginPage/>}/>
-            <Route path='/chat' element={isAuth ? <ChatPage/> : <LoginPage/>}/>
+            <Route path='/chat' element={isAuth ? <ChatPage user={user}/> : <LoginPage/>}/>
             <Route path='/*' element={<NotFound/>}/>
           </Routes>
         </Suspense>
