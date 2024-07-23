@@ -11,6 +11,7 @@ import ReelsPage from './pages/ReelsPage'
 import { Loading } from './components/Loading'
 import UserAccountPage from './pages/UserAccountPage'
 import SearchPage from './pages/SearchPage'
+import ChatPage from './pages/ChatPage'
 
 const App = () => {
 
@@ -27,7 +28,8 @@ const App = () => {
             <Route path='/user/:id' element={isAuth ? <UserAccountPage user={user}/> : <LoginPage/>}/>
             <Route path='/login' element={!isAuth ? <LoginPage/> : <HomePage/>}/>
             <Route path='/register' element={!isAuth ? <RegisterPage/> : <HomePage/>}/>
-            <Route path='/search' element={<SearchPage/>}/>
+            <Route path='/search' element={isAuth ? <SearchPage/> : <LoginPage/>}/>
+            <Rtoue path='/chat' element={isAuth ? <ChatPage/> : <LoginPage/>}/>
             <Route path='/*' element={<NotFound/>}/>
           </Routes>
         </Suspense>
