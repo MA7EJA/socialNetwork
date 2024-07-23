@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { UserData } from '../../context/UserContext'
 import axios from 'axios'
 import { Loading } from '../Loading'
+import Message from './Message'
 
 const MessagesContainer = ({ selectedChat, setChats}) => {
 
@@ -44,9 +45,15 @@ const MessagesContainer = ({ selectedChat, setChats}) => {
                 </div>
             </div>
             <hr className="w-full h-px mt-4 bg-gray-200 border-0 dark:bg-gray-700"/>
-            {loading ? <Loading/> : <>
-                
-            </>}
+            <div className='h-full overflow-y-auto'>
+                {loading ? <Loading/> : <>
+                    <div>
+                        { messages && messages.map((e) => (
+                            <Message message={e.text} ownMessage={e.sender === user._id && true}/>
+                        ))}
+                    </div>
+                </>}
+            </div>
         </>
     )}
     </div>
