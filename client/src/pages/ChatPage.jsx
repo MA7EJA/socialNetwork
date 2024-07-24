@@ -127,7 +127,7 @@ const ChatPage = ({ user }) => {
                     )}
                     <hr className="h-px my-8 bg-gray-400 border-0 dark:bg-gray-500"/>
                     {chats.map((e) => (
-                        <Chat key={e} chat={e} setSelectedChat={setSelectedChat} onClick={() => setShowSide(false)}/>
+                        <Chat key={e._id} chat={e} setSelectedChat={setSelectedChat} onClick={() => setShowSide(false)}/>
                     ))}
                 </ul>
             </div>
