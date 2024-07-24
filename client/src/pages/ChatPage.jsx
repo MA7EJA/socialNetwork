@@ -4,6 +4,7 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import Chat from '../components/chat/Chat'
 import MessagesContainer from '../components/chat/MessagesContainer'
+import { SocketData } from '../context/SocketContext'
 
 const ChatPage = ({ user }) => {
 
@@ -54,6 +55,10 @@ const ChatPage = ({ user }) => {
         getAllChats();
         setShowSide(!showSide)
     }
+
+    const { onlineUsers, socket } = SocketData()
+
+    console.log("Online Users in ChatPage:", onlineUsers);
 
   return (
     <>
@@ -127,7 +132,7 @@ const ChatPage = ({ user }) => {
                     )}
                     <hr className="h-px my-8 bg-gray-400 border-0 dark:bg-gray-500"/>
                     {chats.map((e) => (
-                        <Chat key={e._id} chat={e} setSelectedChat={setSelectedChat} onClick={() => setShowSide(false)}/>
+                        <Chat key={e._id} chat={e} setSelectedChat={setSelectedChat} onClick={() => setShowSide(false)} isOnline={onlineUsers.includes(e.users[0]._id)} />
                     ))}
                 </ul>
             </div>

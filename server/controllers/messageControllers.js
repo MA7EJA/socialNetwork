@@ -1,5 +1,6 @@
 const Chat = require("../models/chatModel");
 const Messages = require("../models/messagesModel");
+const { getRecieverSocketId, io } = require("../socket/socket");
 const tryCatch = require("../utils/tryCatch");
 
 const sendMessage = tryCatch(async (req, res) => {
@@ -32,6 +33,12 @@ const sendMessage = tryCatch(async (req, res) => {
   await newMessage.save();
 
   await chat.updateOne({ latestMessage: { text: message, sender: senderId } });
+
+  const recieverSocketId = getRecieverSocketId(recieverId)
+
+  if(recieverSocketId){
+    io.to(recieverSocketId).emit('newMessage', newMessage)
+  }
 
   res.status(201).json(newMessage);
 });

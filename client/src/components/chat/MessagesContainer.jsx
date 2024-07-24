@@ -4,13 +4,31 @@ import axios from 'axios'
 import { Loading } from '../Loading'
 import Message from './Message'
 import MessageInput from './MessageInput'
+import { SocketData } from '../../context/SocketContext'
 
 const MessagesContainer = ({ selectedChat, setChats}) => {
 
     const [messages, setMessages] = useState([])
     const [loading, setLoading] = useState(false)
 
+    const { socket } = SocketData()
     const {user} = UserData()
+
+    useEffect(() => {
+        if (!socket) return;
+
+        const handleNewMessage = (message) => {
+            if (selectedChat?._id === message.chatId) {
+                setMessages((prev) => [...prev, message]);
+            }
+        };
+
+        socket.on('newMessage', handleNewMessage);
+
+        return () => {
+            socket.off('newMessage', handleNewMessage);
+        };
+    }, [socket, selectedChat?._id]);
 
     async function fetchMessage(){
         setLoading(true)
@@ -25,9 +43,14 @@ const MessagesContainer = ({ selectedChat, setChats}) => {
     }
 
     useEffect(() => {
-        if (!user) return;
-        fetchMessage();
+        if (user && selectedChat) {
+            fetchMessage();
+        }
     }, [selectedChat, user]);
+
+    useEffect(() => {
+    console.log("Messages:", messages);
+}, [messages]); 
 
   return (
     <div className='py-3'>{ selectedChat && (
@@ -50,7 +73,7 @@ const MessagesContainer = ({ selectedChat, setChats}) => {
                 {loading ? <Loading/> : <>
                     <div className='justify-center'>
                         { messages && messages.map((e) => (
-                            <Message key={e._id} message={e.text} ownMessage={e.sender && e.sender._id === user._id} sender={e.sender} timestamp={e.createdAt}/>
+                            <Message key={e._id} message={e.text} ownMessage={e.sender && e.sender._id === user._id || e.sender === user._id} sender={e.sender} timestamp={e.createdAt}/>
                         ))}
                     </div>
                 </>}

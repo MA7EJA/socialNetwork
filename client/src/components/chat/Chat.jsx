@@ -2,7 +2,7 @@ import React from 'react'
 import { UserData } from '../../context/UserContext';
 import { BsSendCheckFill } from "react-icons/bs";
 
-const Chat = ({ chat, setSelectedChat, onClick }) => {
+const Chat = ({ chat, setSelectedChat, onClick, isOnline }) => {
     const { user: loggedInUser } = UserData()
     let user;
     if(chat) user = chat.users[0]
@@ -20,7 +20,9 @@ const Chat = ({ chat, setSelectedChat, onClick }) => {
                 <div className="flex-shrink-0">
                     <div className="relative">
                         <img className="w-10 h-10 rounded-full" src={user.profilePicture.url} alt={user.name}/>
-                        <span className="bottom-0 left-7 absolute  w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
+                        {isOnline && (
+                            <span className="bottom-0 left-7 absolute  w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
+                        )}
                     </div>
                 </div>
                 <div className="flex-1 min-w-0">

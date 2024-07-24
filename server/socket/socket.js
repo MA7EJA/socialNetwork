@@ -13,6 +13,10 @@ const io = new Server(server, {
     }
 })
 
+const getRecieverSocketId = (recieverId) => {
+    return userSocketMap[recieverId];
+}
+
 const userSocketMap = {}
 
 io.on('connection', (socket) => {
@@ -29,6 +33,15 @@ io.on('connection', (socket) => {
         delete userSocketMap[userId]
         io.emit("getOnlineUser", Object.keys(userSocketMap));
     })
+
+    socket.on("sendMessage", (message) => {
+      console.log("Message received on server:", message);
+      const receiverSocketId = getRecieverSocketId(message.receiverId);
+
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("newMessage", message);
+      }
+    });
 })
 
-module.exports = {io, server, app}
+module.exports = { io, server, app, getRecieverSocketId };
