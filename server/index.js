@@ -14,6 +14,12 @@ app.use(cookieParser());
 
 app.use('/api', router)
 
+app.use(express.static(path.join(__dirname, "../client/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.json(__dirname, "../client/dist/index.html"));
+});
+
 server.listen(process.env.PORT, () => {
         if (!process.env.PORT) {
           console.error("PORT variable is not set in .env file");
