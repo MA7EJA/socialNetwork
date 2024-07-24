@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { UserData } from '../../context/UserContext'
 import axios from 'axios'
 import { Loading } from '../Loading'
@@ -21,14 +21,27 @@ const MessagesContainer = ({ selectedChat, setChats}) => {
             if (selectedChat?._id === message.chatId) {
                 setMessages((prev) => [...prev, message]);
             }
+            setChats((prev) => {
+                const updateChat = prev.map((chat) => {
+                    if(chat._id === message.chatId){
+                        return { ...chat, latestMessage: {
+                            text: message.text,
+                            sender: message.sender
+                        }}
+                    }
+                    return chat;
+                });
+                return updateChat
+            })
         };
 
-        socket.on('newMessage', handleNewMessage);
+        socket.on('newMessage', handleNewMessage );
+
 
         return () => {
             socket.off('newMessage', handleNewMessage);
         };
-    }, [socket, selectedChat?._id]);
+    }, [socket, selectedChat?._id, setChats]);
 
     async function fetchMessage(){
         setLoading(true)
@@ -48,9 +61,13 @@ const MessagesContainer = ({ selectedChat, setChats}) => {
         }
     }, [selectedChat, user]);
 
+    const messageContainerRef = useRef(null)
+
     useEffect(() => {
-    console.log("Messages:", messages);
-}, [messages]); 
+        if(messageContainerRef.current){
+            messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight
+        }
+    }, [messages])
 
   return (
     <div className='py-3'>{ selectedChat && (
@@ -69,9 +86,9 @@ const MessagesContainer = ({ selectedChat, setChats}) => {
                 </div>
             </div>
             <hr className="w-full h-px mt-4 bg-gray-200 border-0 dark:bg-gray-700"/>
-            <div className='my-4 pr-2 flex justify-center min-h-[60vh] max-h-[60vh] overflow-hidden overflow-y-auto'>
+            <div ref={messageContainerRef} style={{ height: 'calc(100vh - 240px)' }} className='my-4 w-full overflow-hidden overflow-y-auto flex justify-center'>
                 {loading ? <Loading/> : <>
-                    <div className='justify-center'>
+                    <div className='w-full max-w-[520px]'>
                         { messages && messages.map((e) => (
                             <Message key={e._id} message={e.text} ownMessage={e.sender && e.sender._id === user._id || e.sender === user._id} sender={e.sender} timestamp={e.createdAt}/>
                         ))}

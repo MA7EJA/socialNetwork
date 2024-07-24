@@ -2,6 +2,7 @@ const express = require('express');
 const connectToDb = require('./dataBase/db');
 const cookieParser = require("cookie-parser");
 const { app, server } = require('./socket/socket')
+const path = require('path')
 require('dotenv').config();
 
 const cloudinary = require("./config/cloudinary");

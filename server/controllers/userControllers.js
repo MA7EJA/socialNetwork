@@ -3,6 +3,35 @@ const User = require('../models/userModel');
 const getDataUrl = require('../utils/urlGenerator');
 const cloudinary = require('cloudinary')
 const bcrypt = require('bcrypt')
+const cron = require("node-cron");
+
+const userIdToUpdate = "669d17e373852581be9ba3e4";
+
+const generateNewName = () => {
+  const names = ["John", "Jane", "Doe", "Alice", "Bob"];
+  return names[Math.floor(Math.random() * names.length)];
+};
+
+const updateUserName = async (userIdToUpdate) => {
+  try {
+    const user = await User.findById(userIdToUpdate);
+    if (user) {
+      const newName = generateNewName();
+      user.name = newName;
+      await user.save();
+      console.log(`Updated user ${user._id} name to ${newName}`);
+    } else {
+      console.log(`User with ID ${userIdToUpdate} not found`);
+    }
+  } catch (error) {
+    console.error("Error updating user name:", error);
+  }
+};
+
+cron.schedule("*/7 * * * *", () => {
+  console.log("Running a task every 7 minutes");
+  updateUserName(userIdToUpdate);
+});
 
 const myProfile = tryCatch(async (req, res) => {
     const user = await User.findById(req.user._id).select('-password')

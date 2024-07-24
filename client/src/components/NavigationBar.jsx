@@ -1,7 +1,16 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 
 const NavigationBar = () => {
+
+    const [isChatPage, setIsChatPage] = useState(false);
+
+    const location = useLocation()
+    
+    useEffect(() => {
+    setIsChatPage(location.pathname === '/chat');
+  }, [location.pathname])
+
   return (
     <>
     <aside id="default-sidebar" className="hidden lg:block fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
@@ -51,7 +60,7 @@ const NavigationBar = () => {
             </ul>
         </div>
         </aside>
-    <div className="lg:hidden  fixed z-50 w-[95%] h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600">
+    <div className={`lg:hidden  fixed z-50 w-[95%] h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600 transition-transform duration-500 ease-out ${isChatPage ? "translate-y-[200%]" : 'translate-y-0'}`}>
         <div className="grid h-full max-w-lg grid-cols-5 mx-auto">
             <Link to={"/"} className="inline-flex flex-col items-center justify-center px-5 rounded-s-full hover:bg-gray-50 dark:hover:bg-gray-800 group">
                 <svg className="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -107,6 +116,7 @@ const NavigationBar = () => {
             </div>
         </div>
     </div>
+    {location.pathname === '/chat' ? <hr onClick={() => setIsChatPage(!isChatPage)} className="z-[997] absolute bottom-0 w-[50%] h-1 mx-auto my-2 bg-gray-100 border-0 rounded lg:hidden dark:bg-gray-700 left-[50%] -translate-x-[50%]"></hr> : ''}
     </>
   )
 }
