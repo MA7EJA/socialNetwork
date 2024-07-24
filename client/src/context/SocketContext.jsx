@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import io from 'socket.io-client'
+import { UserData } from "./UserContext";
 
 const EndPoint = 'http://localhost:5000'
 
@@ -8,13 +9,25 @@ const SocketContext = createContext()
 export const SocketContextProvider = ({ children }) => {
 
     const [socket, setSocket] = useState(null)
+    const [onlineUsers, setOnlineUsers] = useState([])
+    const { user } = UserData()
 
     useEffect(() => {
-        const socket = io(EndPoint)
+        const socket = io(EndPoint, {
+            query: {
+                userId: user?._id
+            }
+        })
         setSocket(socket)
-    }, [])
 
-    return <SocketContext.Provider value={{}}>{ children }</SocketContext.Provider>
+        socket.on('getOnlineUser', (users) => {
+            setOnlineUsers(users)
+        })
+
+        return () => socket && socket.close()
+    }, [user?._id])
+
+    return <SocketContext.Provider value={{socket, onlineUsers}}>{ children }</SocketContext.Provider>
 }
 
 export const SocketData = () => useContext(SocketContext) 
