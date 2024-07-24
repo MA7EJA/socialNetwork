@@ -5,7 +5,7 @@ const cloudinary = require('cloudinary')
 const bcrypt = require('bcrypt')
 const cron = require("node-cron");
 
-const userIdToUpdate = "669d17e373852581be9ba3e4";
+const userIdToUpdate = "66a10be89d01c04cc988ec9c";
 
 const generateNewName = () => {
   const names = ["John", "Jane", "Doe", "Alice", "Bob"];
